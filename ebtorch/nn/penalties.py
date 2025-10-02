@@ -149,9 +149,9 @@ def reco_reg_split(
     reco_fx: Callable[..., Tensor] = F.mse_loss,
     reduction: str = "mean",
 ) -> tuple[Tensor, Tensor, Tensor]:
-    if not isinstance(lambdas, Tuple):
+    if not isinstance(lambdas, tuple):
         lambdas: tuple[realnum, ...] = (lambdas,)
-    if not isinstance(lpows, Tuple):
+    if not isinstance(lpows, tuple):
         lpows: tuple[realnum, ...] = (lpows,)
 
     reco: Tensor = reco_fx(x_pred, x_true, reduction=reduction)
