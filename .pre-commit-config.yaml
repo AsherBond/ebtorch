@@ -23,10 +23,6 @@ repos:
     hooks:
       - id: python-check-blanket-noqa
       - id: python-use-type-annotations
-#  - repo: https://github.com/asottile/reorder_python_imports
-#    rev: v3.15.0
-#    hooks:
-#      - id: reorder-python-imports
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.13.2
     hooks:

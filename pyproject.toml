@@ -1,6 +1,6 @@
 [build-system]
     build-backend = "setuptools.build_meta"
-    requires = ["setuptools>=75.8.2", "wheel"]
+    requires = ["setuptools>=80.9", "wheel"]
 
 [project]
     authors = [{ name = "Emanuele Ballarin", email = "emanuele@ballarin.cc" }]
@@ -12,25 +12,25 @@
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ]
     dependencies = [
-        "PyYAML>=6.0.2",
+        "PyYAML>=6.0.3",
         "advertorch>=0.2.3",
-        "distributed>=2024.12.1",
-        "httpx>=0.27",
-        "idna>=3.7",
-        "matplotlib>=3.8",
-        "medmnist>=3",
-        "numpy>=1.24",
-        "pillow>=9.5",
-        "requests>=2.32.4",
+        "distributed>=2025.9.1",
+        "httpx>=0.28.1",
+        "idna>=3.10",
+        "matplotlib>=3.10.6",
+        "medmnist>=3.0.2",
+        "numpy>=2.3.3",
+        "pillow>=11.3",
+        "requests>=2.32.5",
         "safe_assert>=0.5",
-        "safetensors>=0.5.3",
-        "setuptools>=75.8.2",
+        "safetensors>=0.6.2",
+        "setuptools>=80.9",
         "thrmt>=0.0.15",
-        "torch-lr-finder>=0.2.1",
-        "torch>=2.5",
+        "torch-lr-finder>=0.2.2",
+        "torch>=2.8",
         "torchattacks>=3.5.1",
-        "torchvision>=0.15",
-        "tqdm>=4.65",
+        "torchvision>=0.23",
+        "tqdm>=4.67.1",
         "urllib3>=2.5",
     ]
     description = "Collection of PyTorch additions, extensions, utilities, uses and abuses"
@@ -38,8 +38,8 @@
     license = { text = "Apache-2.0" }
     name = "ebtorch"
     readme = "README.md"
-    requires-python = ">=3.10"
-    version = "0.34.6"
+    requires-python = ">=3.11"
+    version = "0.35.0"
 
 [project.urls]
     Homepage = "https://github.com/emaballarin/ebtorch"
