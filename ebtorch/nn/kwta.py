@@ -13,21 +13,20 @@
 #
 # ==============================================================================
 # For type-annotation
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from collections.abc import Callable
 from typing import Any
-from typing import List
-from typing import Optional
-from typing import Union
 
 import torch
 import torch.nn.functional as F
 from torch import Tensor
 from torch.nn import Module
 
-__all__ = ["KWTA1d", "KWTA2d", "BrokenReLU"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["KWTA1d", "KWTA2d", "BrokenReLU"]
 
 # Custom type-annotation types
-realnum = Union[float, int]
+realnum = float | int
 
 
 # Trivial reduction functions
@@ -68,15 +67,15 @@ red_none_but: str = str("'reduction' must be defined if both 'ratio' and 'k' are
 
 
 class KWTA1d(Module):
-    __constants__: List[str] = ["largest"]
+    __constants__: list[str] = ["largest"]
     largest: bool
 
     def __init__(
         self,
         largest: bool = True,
         absolute: bool = False,
-        ratio: Optional[realnum] = None,
-        k: Optional[int] = None,
+        ratio: realnum | None = None,
+        k: int | None = None,
         reduction: Callable[[realnum, realnum], realnum] = None,
     ) -> None:
         super(KWTA1d, self).__init__()
@@ -135,15 +134,15 @@ class KWTA1d(Module):
 
 
 class KWTA2d(Module):
-    __constants__: List[str] = ["largest"]
+    __constants__: list[str] = ["largest"]
     largest: bool
 
     def __init__(
         self,
         largest: bool = True,
         absolute: bool = False,
-        ratio: Optional[realnum] = None,
-        k: Optional[int] = None,
+        ratio: realnum | None = None,
+        k: int | None = None,
         reduction: Callable[[realnum, realnum], realnum] = None,
         xchan: bool = False,
     ) -> None:
@@ -232,7 +231,7 @@ class KWTA2d(Module):
 
 
 class BrokenReLU(Module):
-    __constants__: List[str] = ["plateau", "inplace"]
+    __constants__: list[str] = ["plateau", "inplace"]
     plateau: float
     inplace: bool
 

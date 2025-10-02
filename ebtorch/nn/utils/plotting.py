@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # ──────────────────────────────────────────────────────────────────────────────
-from typing import List
-from typing import Optional
-
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import matplotlib.pyplot as plt
 
 # ──────────────────────────────────────────────────────────────────────────────
-__all__: List[str] = ["custom_plot_setup", "plot_out"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["custom_plot_setup", "plot_out"]
 # ──────────────────────────────────────────────────────────────────────────────
 
 
@@ -27,7 +26,7 @@ def custom_plot_setup(usetex: bool = True) -> None:
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-def plot_out(savepath: Optional[str] = None) -> None:
+def plot_out(savepath: str | None = None) -> None:
     if savepath:
         plt.savefig(savepath, dpi=400, bbox_inches="tight")
     else:

@@ -28,30 +28,29 @@
 # ==============================================================================
 # SPDX-License-Identifier: MIT
 # SPDX-License-Identifier: Apache-2.0
-# IMPORTS
-from typing import Union
-
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from torch import nn
 from torch import Tensor
 
 from .functional import field_transform as ffield_transform
 
 
-__all__ = ["FieldTransform"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["FieldTransform"]
 
 
 class FieldTransform(nn.Module):
     def __init__(
         self,
-        pre_sum: Union[float, Tensor] = 0.0,
-        mult_div: Union[float, Tensor] = 1.0,
-        post_sum: Union[float, Tensor] = 0.0,
+        pre_sum: float | Tensor = 0.0,
+        mult_div: float | Tensor = 1.0,
+        post_sum: float | Tensor = 0.0,
         div_not_mul: bool = False,
     ):
         super().__init__()
-        self.pre_sum: Union[float, Tensor] = pre_sum
-        self.mult_div: Union[float, Tensor] = mult_div
-        self.post_sum: Union[float, Tensor] = post_sum
+        self.pre_sum: float | Tensor = pre_sum
+        self.mult_div: float | Tensor = mult_div
+        self.post_sum: float | Tensor = post_sum
         self.div_not_mul: bool = div_not_mul
 
     def forward(self, x_input: Tensor) -> Tensor:

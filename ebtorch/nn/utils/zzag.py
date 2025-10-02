@@ -1,26 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # ~~ Imports ~~ ────────────────────────────────────────────────────────────────
-from typing import List
-from typing import Optional
-
 import numpy as np
 import torch as th
 from torch import Tensor
 
 # ~~ Exports ~~ ────────────────────────────────────────────────────────────────
-__all__: List[str] = ["zigzag", "zigzag_indices"]
+__all__: list[str] = ["zigzag", "zigzag_indices"]
 
 
 # ~~ Functions ~~ ──────────────────────────────────────────────────────────────
 
 
-def zigzag_indices(n: int) -> List[int]:
+def zigzag_indices(n: int) -> list[int]:
     """
     Compute zigzag indices for a sequence of length n.
     Returns indices: 0, n-1, 1, n-2, ...
     """
-    indices: List[int] = []
+    indices: list[int] = []
     for i in range((n + 1) // 2):
         indices.append(i)
         if i != n - 1 - i:
@@ -28,7 +25,7 @@ def zigzag_indices(n: int) -> List[int]:
     return indices
 
 
-def zigzag(data, dim: Optional[int] = None):
+def zigzag(data, dim: int | None = None):
     """
     Reorder the elements of the input in a zigzag pattern.
 
@@ -50,7 +47,7 @@ def zigzag(data, dim: Optional[int] = None):
         if dim is None:
             raise ValueError("For a PyTorch tensor, `dim` must be specified.")
         n: int = data.size(dim)
-        indices: List[int] = zigzag_indices(n)
+        indices: list[int] = zigzag_indices(n)
         idx_tensor: Tensor = th.tensor(indices, dtype=th.long, device=data.device)
         return data.index_select(dim, idx_tensor)
 
@@ -58,12 +55,12 @@ def zigzag(data, dim: Optional[int] = None):
         if dim is None:
             raise ValueError("For a NumPy array, `dim` must be specified.")
         n: int = data.shape[dim]
-        indices: List[int] = zigzag_indices(n)
+        indices: list[int] = zigzag_indices(n)
         return np.take(data, indices, axis=dim)
 
     elif isinstance(data, (list, tuple)):
         n = len(data)
-        indices: List[int] = zigzag_indices(n)
+        indices: list[int] = zigzag_indices(n)
         if isinstance(data, list):
             return [data[i] for i in indices]
         else:
@@ -72,7 +69,7 @@ def zigzag(data, dim: Optional[int] = None):
     elif hasattr(data, "__iter__"):
         data_list: list = list(data)
         n: int = len(data_list)
-        indices: List[int] = zigzag_indices(n)
+        indices: list[int] = zigzag_indices(n)
         return (data_list[i] for i in indices)
 
     else:

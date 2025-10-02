@@ -29,9 +29,8 @@
 # ==============================================================================
 # SPDX-License-Identifier: MIT
 # SPDX-License-Identifier: Apache-2.0
-from typing import List
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from typing import TypeVar
-from typing import Union
 
 import torch
 import torch.nn as nn
@@ -45,7 +44,8 @@ CCM1D = TypeVar("CCM1D", bound="CoordConv1d")
 CCM2D = TypeVar("CCM2D", bound="CoordConv2d")
 CCM3D = TypeVar("CCM3D", bound="CoordConv3d")
 
-__all__: List[str] = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "CoordConv1d",
     "CoordConv2d",
     "CoordConv3d",
@@ -193,7 +193,7 @@ class CoordConv1d(conv.Conv1d):
         out_channels: int,
         kernel_size: th_size_1_t,
         stride: th_size_1_t = 1,
-        padding: Union[str, th_size_1_t] = 0,
+        padding: str | th_size_1_t = 0,
         dilation: th_size_1_t = 1,
         groups: int = 1,
         bias: bool = True,
@@ -244,7 +244,7 @@ class CoordConv2d(conv.Conv2d):
         out_channels: int,
         kernel_size: th_size_2_t,
         stride: th_size_2_t = 1,
-        padding: Union[str, th_size_2_t] = 0,
+        padding: str | th_size_2_t = 0,
         dilation: th_size_2_t = 1,
         groups: int = 1,
         bias: bool = True,
@@ -295,7 +295,7 @@ class CoordConv3d(conv.Conv3d):
         out_channels: int,
         kernel_size: th_size_3_t,
         stride: th_size_3_t = 1,
-        padding: Union[str, th_size_3_t] = 0,
+        padding: str | th_size_3_t = 0,
         dilation: th_size_3_t = 1,
         groups: int = 1,
         bias: bool = True,

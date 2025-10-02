@@ -6,12 +6,10 @@
 #  (see: https://url.ballarin.cc/mitlicense)
 #
 # ──────────────────────────────────────────────────────────────────────────────
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import os.path
 from collections.abc import Callable
 from typing import Any
-from typing import Dict
-from typing import Optional
-from typing import Tuple
 
 import numpy as np
 from PIL import Image
@@ -19,6 +17,9 @@ from torchvision.datasets.utils import check_integrity
 from torchvision.datasets.utils import download_url
 from torchvision.datasets.utils import verify_str_arg
 from torchvision.datasets.vision import VisionDataset
+
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["TinyImagenet"]
 
 
 class TinyImagenet(VisionDataset):
@@ -35,7 +36,7 @@ class TinyImagenet(VisionDataset):
             downloaded again.
     """
 
-    split_dl_info: Dict[str, Tuple[str, str, str]] = {
+    split_dl_info: dict[str, tuple[str, str, str]] = {
         "train": (
             "https://bucket.ballarin.cc/data/tiny_imagenet_200/tiny-imagenet-200-npz/train.npz",
             "train.npz",
@@ -52,8 +53,8 @@ class TinyImagenet(VisionDataset):
         self,
         root: str,
         split: str = "train",
-        transform: Optional[Callable] = None,
-        target_transform: Optional[Callable] = None,
+        transform: Callable | None = None,
+        target_transform: Callable | None = None,
         download: bool = False,
     ) -> None:
         super().__init__(root, transform=transform, target_transform=target_transform)
@@ -73,7 +74,7 @@ class TinyImagenet(VisionDataset):
         self.data = loaded_npz["image"]
         self.targets: list = loaded_npz["label"].tolist()
 
-    def __getitem__(self, index: int) -> Tuple[Any, Any]:
+    def __getitem__(self, index: int) -> tuple[Any, Any]:
         """
         Args:
             index (int): Index

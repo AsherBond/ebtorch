@@ -21,12 +21,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import torch
 import torchvision
 from matplotlib import pyplot as plt
 from torch import nn
 
-__all__ = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "extract_conv_filters",
     "show_filters",
 ]

@@ -22,13 +22,10 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # ──────────────────────────────────────────────────────────────────────────────
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from contextlib import ExitStack
 from copy import deepcopy
 from functools import partial
-from typing import List
-from typing import Optional
-from typing import Tuple
-from typing import Union
 
 import torch
 from torch import device as torch_device
@@ -37,7 +34,8 @@ from torch.nn import Module
 from torch.utils.hooks import RemovableHandle
 
 # ──────────────────────────────────────────────────────────────────────────────
-__all__: List[str] = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "model_reqgrad_",
     "model_reqgrad",
     "repr_fx_flat_adapter",
@@ -61,21 +59,21 @@ def model_reqgrad(model: Module, set_to: bool) -> Module:
     return new_model
 
 
-def repr_fx_flat_adapter(representation: List[Tensor]) -> Tensor:
+def repr_fx_flat_adapter(representation: list[Tensor]) -> Tensor:
     return torch.cat([torch.flatten(t, start_dim=1) for t in representation], dim=1)
 
 
-def repr_sizes_flat_adapter(representation: List[Tensor]) -> List[int]:
-    sizes: List[int] = [l := 0]
+def repr_sizes_flat_adapter(representation: list[Tensor]) -> list[int]:
+    sizes: list[int] = [l := 0]
     return sizes + [l := l + t.numel() for t in representation]
 
 
 def store_repr_fx(
-    representation: List[Tensor],
+    representation: list[Tensor],
     x: Tensor,
-    device: Union[str, torch_device],
+    device: str | torch_device,
     preserve_graph: bool = False,
-) -> List[Tensor]:
+) -> list[Tensor]:
     with ExitStack() as stack:
         if not preserve_graph:
             stack.enter_context(torch.no_grad())
@@ -95,11 +93,11 @@ def store_repr_fx(
 
 
 def store_repr_hook(
-    representation: List[Tensor],
+    representation: list[Tensor],
     mod: Module,
     inp: Tensor,
     out: Tensor,
-    device: Union[str, torch_device],
+    device: str | torch_device,
     preserve_graph: bool = False,
 ) -> None:
     _ = mod, inp
@@ -108,12 +106,12 @@ def store_repr_hook(
 
 def store_repr_autohook(
     model: Module,
-    representation: List[Tensor],
-    device: Union[str, torch_device],
-    layers: Optional[Tuple[str, ...]] = None,
+    representation: list[Tensor],
+    device: str | torch_device,
+    layers: tuple[str, ...] | None = None,
     preserve_graph: bool = False,
-) -> List[RemovableHandle]:
-    handles: List[RemovableHandle] = []
+) -> list[RemovableHandle]:
+    handles: list[RemovableHandle] = []
 
     for name, mod in model.named_modules():
         if layers is None or name in layers:
@@ -133,12 +131,12 @@ def store_repr_autohook(
 def gather_model_repr(
     model: Module,
     xin: Tensor,
-    layers: Optional[Tuple[str, ...]] = None,
+    layers: tuple[str, ...] | None = None,
     preserve_graph: bool = False,
-) -> Tuple[Tensor, List[Tensor]]:
-    representation: List[Tensor] = []
+) -> tuple[Tensor, list[Tensor]]:
+    representation: list[Tensor] = []
 
-    handles: List[RemovableHandle] = store_repr_autohook(model, representation, xin.device, layers, preserve_graph)
+    handles: list[RemovableHandle] = store_repr_autohook(model, representation, xin.device, layers, preserve_graph)
 
     xout: Tensor = model(xin)
 

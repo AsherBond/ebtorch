@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from typing import List
-
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from torch import nn
 from torch import Tensor
 
 from .functional import telu as ftelu
 
-__all__: List[str] = ["TeLU"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["TeLU"]
 
 
 class TeLU(nn.Module):

@@ -20,18 +20,15 @@
 # ──────────────────────────────────────────────────────────────────────────────
 """WideResNet and PreActResNet implementations in PyTorch. From DeepMind's original."""
 
-from typing import List
-from typing import Optional
-from typing import Tuple
-from typing import Union
-
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 # ──────────────────────────────────────────────────────────────────────────────
 
-__all__ = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "WideResNet",
     "PreActResNet",
     "CIFAR10_MEAN",
@@ -46,14 +43,14 @@ __all__ = [
 
 # ──────────────────────────────────────────────────────────────────────────────
 
-CIFAR10_MEAN: Tuple[float, float, float] = (0.4914, 0.4822, 0.4465)
-CIFAR10_STD: Tuple[float, float, float] = (0.2471, 0.2435, 0.2616)
-CIFAR100_MEAN: Tuple[float, float, float] = (0.5071, 0.4865, 0.4409)
-CIFAR100_STD: Tuple[float, float, float] = (0.2673, 0.2564, 0.2762)
-SVHN_MEAN: Tuple[float, float, float] = (0.5, 0.5, 0.5)
-SVHN_STD: Tuple[float, float, float] = (0.5, 0.5, 0.5)
-TINY_MEAN: Tuple[float, float, float] = (0.4802, 0.4481, 0.3975)
-TINY_STD: Tuple[float, float, float] = (0.2302, 0.2265, 0.2262)
+CIFAR10_MEAN: tuple[float, float, float] = (0.4914, 0.4822, 0.4465)
+CIFAR10_STD: tuple[float, float, float] = (0.2471, 0.2435, 0.2616)
+CIFAR100_MEAN: tuple[float, float, float] = (0.5071, 0.4865, 0.4409)
+CIFAR100_STD: tuple[float, float, float] = (0.2673, 0.2564, 0.2762)
+SVHN_MEAN: tuple[float, float, float] = (0.5, 0.5, 0.5)
+SVHN_STD: tuple[float, float, float] = (0.5, 0.5, 0.5)
+TINY_MEAN: tuple[float, float, float] = (0.4802, 0.4481, 0.3975)
+TINY_STD: tuple[float, float, float] = (0.2302, 0.2265, 0.2262)
 
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -100,7 +97,7 @@ class _Block(nn.Module):
         self.conv_1: nn.Module = nn.Conv2d(out_planes, out_planes, kernel_size=3, stride=1, padding=1, bias=False)
         self.has_shortcut: bool = in_planes != out_planes
         if self.has_shortcut:
-            self.shortcut: Optional[nn.Module] = nn.Conv2d(
+            self.shortcut: nn.Module | None = nn.Conv2d(
                 in_planes,
                 out_planes,
                 kernel_size=1,
@@ -109,7 +106,7 @@ class _Block(nn.Module):
                 bias=False,
             )
         else:
-            self.shortcut: Optional[nn.Module] = None
+            self.shortcut: nn.Module | None = None
         self._stride: int = stride
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -226,8 +223,8 @@ class WideResNet(nn.Module):
         depth: int = 28,
         width: int = 10,
         activation_fn: nn.Module = nn.SiLU,
-        mean: Union[Tuple[float, ...], float] = CIFAR10_MEAN,
-        std: Union[Tuple[float, ...], float] = CIFAR10_STD,
+        mean: tuple[float, ...] | float = CIFAR10_MEAN,
+        std: tuple[float, ...] | float = CIFAR10_STD,
         padding: int = 0,
         num_input_channels: int = 3,
         bn_momentum: float = 0.1,
@@ -236,10 +233,10 @@ class WideResNet(nn.Module):
         super().__init__()
         self.mean: torch.Tensor = torch.tensor(mean).view(num_input_channels, 1, 1)
         self.std: torch.Tensor = torch.tensor(std).view(num_input_channels, 1, 1)
-        self.mean_cuda: Optional[torch.Tensor] = None
-        self.std_cuda: Optional[torch.Tensor] = None
+        self.mean_cuda: torch.Tensor | None = None
+        self.std_cuda: torch.Tensor | None = None
         self.padding: int = padding
-        num_channels: List[int] = [
+        num_channels: list[int] = [
             16,
             16 * width,
             32 * width,
@@ -310,8 +307,8 @@ class PreActResNet(nn.Module):
         depth: int = 18,
         width: int = 0,  # Used to make the constructor consistent.
         activation_fn: nn.Module = nn.SiLU,
-        mean: Union[Tuple[float, ...], float] = CIFAR10_MEAN,
-        std: Union[Tuple[float, ...], float] = CIFAR10_STD,
+        mean: tuple[float, ...] | float = CIFAR10_MEAN,
+        std: tuple[float, ...] | float = CIFAR10_STD,
         padding: int = 0,
         num_input_channels: int = 3,
         bn_momentum: float = 0.1,
@@ -322,8 +319,8 @@ class PreActResNet(nn.Module):
             raise ValueError("Unsupported `width = 0`.")
         self.mean: torch.Tensor = torch.tensor(mean).view(num_input_channels, 1, 1)
         self.std: torch.Tensor = torch.tensor(std).view(num_input_channels, 1, 1)
-        self.mean_cuda: Optional[torch.Tensor] = None
-        self.std_cuda: Optional[torch.Tensor] = None
+        self.mean_cuda: torch.Tensor | None = None
+        self.std_cuda: torch.Tensor | None = None
         self.padding: int = padding
         self.conv_2d: nn.Module = nn.Conv2d(
             in_channels=num_input_channels,
@@ -334,9 +331,9 @@ class PreActResNet(nn.Module):
             bias=False,
         )
         if depth == 18:
-            num_blocks: Tuple[int, int, int, int] = (2, 2, 2, 2)
+            num_blocks: tuple[int, int, int, int] = (2, 2, 2, 2)
         elif depth == 34:
-            num_blocks: Tuple[int, int, int, int] = (3, 4, 6, 3)
+            num_blocks: tuple[int, int, int, int] = (3, 4, 6, 3)
         else:
             raise ValueError("Unsupported `depth != 18` or `depth != 34`.")
         self.layer_0: nn.Module = self._make_layer(

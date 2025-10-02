@@ -19,9 +19,11 @@
 #
 # ==============================================================================
 # SPDX-License-Identifier: Apache-2.0
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from torch import nn
 
-__all__ = ["ProbePrintLayer"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["ProbePrintLayer"]
 
 
 class ProbePrintLayer(nn.Module):

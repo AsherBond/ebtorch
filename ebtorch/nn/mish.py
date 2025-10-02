@@ -30,13 +30,14 @@
 # SPDX-License-Identifier: Apache-2.0
 # IMPORTS
 # Type hints
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from math import sqrt as math_sqrt
-from typing import Union
 
 import torch
 from torch import nn
 
-__all__ = ["Mish", "mishlayer_init"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["Mish", "mishlayer_init"]
 
 Mish = nn.Mish
 
@@ -44,7 +45,7 @@ Mish = nn.Mish
 # (cfr.: https://gist.github.com/redknightlois/b5d36fd2ae306cb8b3484c1e3bcce253)
 
 
-def mishlayer_init(mlayer, variance: Union[float, int] = 1.0):
+def mishlayer_init(mlayer, variance: float | int = 1.0):
     """
     Initialize the weights and biases of a Layer according to the
     "Variance-based initialization method for Mish-activation layers"

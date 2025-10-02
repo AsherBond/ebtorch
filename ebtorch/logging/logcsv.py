@@ -11,24 +11,24 @@
 # SPDX-License-Identifier: MIT
 #
 # ──────────────────────────────────────────────────────────────────────────────
-# IMPORTS
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import csv
 from pathlib import Path
-from typing import Union
 
-__all__ = ["LogCSV"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["LogCSV"]
 
 
 class LogCSV:
     def __init__(
         self,
-        file_path: Union[str, Path],
+        file_path: str | Path,
         open_now: bool = False,
         clear_now: bool = False,
     ) -> None:
         self.constants: list = []
         self.buffer: list = []
-        self.filepath: Union[str, Path] = file_path
+        self.filepath: str | Path = file_path
 
         if clear_now:
             open(self.filepath, "w").close()  # clear

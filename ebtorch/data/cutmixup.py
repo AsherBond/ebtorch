@@ -18,10 +18,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import numpy as np
 import torch
 
-__all__ = ["Mixup", "FastCollateMixup"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["Mixup", "FastCollateMixup"]
 
 
 def _one_hot(x, num_classes, on_value=1.0, off_value=0.0):
@@ -102,7 +104,7 @@ class Mixup:
     Args:
         mixup_alpha (float): mixup alpha value, mixup is active if > 0.
         cutmix_alpha (float): cutmix alpha value, cutmix is active if > 0.
-        cutmix_minmax (List[float]): cutmix min/max image ratio, cutmix is active and uses this vs alpha if not None.
+        cutmix_minmax (list[float]): cutmix min/max image ratio, cutmix is active and uses this vs alpha if not None.
         prob (float): probability of applying mixup or cutmix per batch or element
         switch_prob (float): probability of switching to cutmix instead of mixup when both are active
         mode (str): how to apply mixup/cutmix params (per 'batch', 'pair' (pair of elements), 'elem' (element)

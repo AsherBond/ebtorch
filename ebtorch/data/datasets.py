@@ -6,9 +6,8 @@
 #  (see: https://url.ballarin.cc/mitlicense)
 #
 # ──────────────────────────────────────────────────────────────────────────────
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import os
-from typing import Optional
-from typing import Tuple
 
 import torch
 from medmnist import OCTMNIST
@@ -33,7 +32,8 @@ from torchvision.transforms import ToTensor
 
 from .tinyimagenet import TinyImagenet
 
-__all__ = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "mnist_dataloader_dispatcher",
     "fashionmnist_dataloader_dispatcher",
     "kmnist_dataloader_dispatcher",
@@ -60,15 +60,15 @@ def _determine_train_test_args_common(dataset_name: str, is_train: bool) -> dict
 def _dataloader_dispatcher(  # NOSONAR
     dataset: str,
     data_root: str = data_root_literal,
-    batch_size_train: Optional[int] = None,
-    batch_size_test: Optional[int] = None,
+    batch_size_train: int | None = None,
+    batch_size_test: int | None = None,
     cuda_accel: bool = False,
     unshuffle_train: bool = False,
     shuffle_test: bool = False,
-    dataset_kwargs: Optional[dict] = None,
-    dataloader_kwargs: Optional[dict] = None,
+    dataset_kwargs: dict | None = None,
+    dataloader_kwargs: dict | None = None,
     augment_train: bool = False,
-) -> Tuple[DataLoader, DataLoader, DataLoader]:
+) -> tuple[DataLoader, DataLoader, DataLoader]:
     if dataset == "mnist":
         dataset_fx = MNIST
         batch_size_train: int = 256 if batch_size_train is None else batch_size_train
@@ -185,15 +185,15 @@ def _dataloader_dispatcher(  # NOSONAR
 
 def mnist_dataloader_dispatcher(
     data_root: str = data_root_literal,
-    batch_size_train: Optional[int] = None,
-    batch_size_test: Optional[int] = None,
+    batch_size_train: int | None = None,
+    batch_size_test: int | None = None,
     cuda_accel: bool = False,
     unshuffle_train: bool = False,
     shuffle_test: bool = False,
-    dataset_kwargs: Optional[dict] = None,
-    dataloader_kwargs: Optional[dict] = None,
+    dataset_kwargs: dict | None = None,
+    dataloader_kwargs: dict | None = None,
     augment_train: bool = False,
-) -> Tuple[DataLoader, DataLoader, DataLoader]:
+) -> tuple[DataLoader, DataLoader, DataLoader]:
     return _dataloader_dispatcher(
         dataset="mnist",
         data_root=data_root,
@@ -210,15 +210,15 @@ def mnist_dataloader_dispatcher(
 
 def fashionmnist_dataloader_dispatcher(
     data_root: str = data_root_literal,
-    batch_size_train: Optional[int] = None,
-    batch_size_test: Optional[int] = None,
+    batch_size_train: int | None = None,
+    batch_size_test: int | None = None,
     cuda_accel: bool = False,
     unshuffle_train: bool = False,
     shuffle_test: bool = False,
-    dataset_kwargs: Optional[dict] = None,
-    dataloader_kwargs: Optional[dict] = None,
+    dataset_kwargs: dict | None = None,
+    dataloader_kwargs: dict | None = None,
     augment_train: bool = False,
-) -> Tuple[DataLoader, DataLoader, DataLoader]:
+) -> tuple[DataLoader, DataLoader, DataLoader]:
     return _dataloader_dispatcher(
         dataset="fashionmnist",
         data_root=data_root,
@@ -235,15 +235,15 @@ def fashionmnist_dataloader_dispatcher(
 
 def kmnist_dataloader_dispatcher(
     data_root: str = data_root_literal,
-    batch_size_train: Optional[int] = None,
-    batch_size_test: Optional[int] = None,
+    batch_size_train: int | None = None,
+    batch_size_test: int | None = None,
     cuda_accel: bool = False,
     unshuffle_train: bool = False,
     shuffle_test: bool = False,
-    dataset_kwargs: Optional[dict] = None,
-    dataloader_kwargs: Optional[dict] = None,
+    dataset_kwargs: dict | None = None,
+    dataloader_kwargs: dict | None = None,
     augment_train: bool = False,
-) -> Tuple[DataLoader, DataLoader, DataLoader]:
+) -> tuple[DataLoader, DataLoader, DataLoader]:
     return _dataloader_dispatcher(
         dataset="kmnist",
         data_root=data_root,
@@ -260,15 +260,15 @@ def kmnist_dataloader_dispatcher(
 
 def cifarten_dataloader_dispatcher(
     data_root: str = data_root_literal,
-    batch_size_train: Optional[int] = None,
-    batch_size_test: Optional[int] = None,
+    batch_size_train: int | None = None,
+    batch_size_test: int | None = None,
     cuda_accel: bool = False,
     unshuffle_train: bool = False,
     shuffle_test: bool = False,
-    dataset_kwargs: Optional[dict] = None,
-    dataloader_kwargs: Optional[dict] = None,
+    dataset_kwargs: dict | None = None,
+    dataloader_kwargs: dict | None = None,
     augment_train: bool = False,
-) -> Tuple[DataLoader, DataLoader, DataLoader]:
+) -> tuple[DataLoader, DataLoader, DataLoader]:
     return _dataloader_dispatcher(
         dataset="cifar10",
         data_root=data_root,
@@ -285,15 +285,15 @@ def cifarten_dataloader_dispatcher(
 
 def cifarhundred_dataloader_dispatcher(
     data_root: str = data_root_literal,
-    batch_size_train: Optional[int] = None,
-    batch_size_test: Optional[int] = None,
+    batch_size_train: int | None = None,
+    batch_size_test: int | None = None,
     cuda_accel: bool = False,
     unshuffle_train: bool = False,
     shuffle_test: bool = False,
-    dataset_kwargs: Optional[dict] = None,
-    dataloader_kwargs: Optional[dict] = None,
+    dataset_kwargs: dict | None = None,
+    dataloader_kwargs: dict | None = None,
     augment_train: bool = False,
-) -> Tuple[DataLoader, DataLoader, DataLoader]:
+) -> tuple[DataLoader, DataLoader, DataLoader]:
     return _dataloader_dispatcher(
         dataset="cifar100",
         data_root=data_root,
@@ -310,14 +310,14 @@ def cifarhundred_dataloader_dispatcher(
 
 def pathmnist_dataloader_dispatcher(
     data_root: str = data_root_literal,
-    batch_size_train: Optional[int] = None,
-    batch_size_test: Optional[int] = None,
+    batch_size_train: int | None = None,
+    batch_size_test: int | None = None,
     cuda_accel: bool = False,
     unshuffle_train: bool = False,
     shuffle_test: bool = False,
-    dataset_kwargs: Optional[dict] = None,
-    dataloader_kwargs: Optional[dict] = None,
-) -> Tuple[DataLoader, DataLoader, DataLoader]:
+    dataset_kwargs: dict | None = None,
+    dataloader_kwargs: dict | None = None,
+) -> tuple[DataLoader, DataLoader, DataLoader]:
     return _dataloader_dispatcher(
         dataset="pathmnist",
         data_root=data_root,
@@ -333,14 +333,14 @@ def pathmnist_dataloader_dispatcher(
 
 def octmnist_dataloader_dispatcher(
     data_root: str = data_root_literal,
-    batch_size_train: Optional[int] = None,
-    batch_size_test: Optional[int] = None,
+    batch_size_train: int | None = None,
+    batch_size_test: int | None = None,
     cuda_accel: bool = False,
     unshuffle_train: bool = False,
     shuffle_test: bool = False,
-    dataset_kwargs: Optional[dict] = None,
-    dataloader_kwargs: Optional[dict] = None,
-) -> Tuple[DataLoader, DataLoader, DataLoader]:
+    dataset_kwargs: dict | None = None,
+    dataloader_kwargs: dict | None = None,
+) -> tuple[DataLoader, DataLoader, DataLoader]:
     return _dataloader_dispatcher(
         dataset="octmnist",
         data_root=data_root,
@@ -356,14 +356,14 @@ def octmnist_dataloader_dispatcher(
 
 def tissuemnist_dataloader_dispatcher(
     data_root: str = data_root_literal,
-    batch_size_train: Optional[int] = None,
-    batch_size_test: Optional[int] = None,
+    batch_size_train: int | None = None,
+    batch_size_test: int | None = None,
     cuda_accel: bool = False,
     unshuffle_train: bool = False,
     shuffle_test: bool = False,
-    dataset_kwargs: Optional[dict] = None,
-    dataloader_kwargs: Optional[dict] = None,
-) -> Tuple[DataLoader, DataLoader, DataLoader]:
+    dataset_kwargs: dict | None = None,
+    dataloader_kwargs: dict | None = None,
+) -> tuple[DataLoader, DataLoader, DataLoader]:
     return _dataloader_dispatcher(
         dataset="tissuemnist",
         data_root=data_root,
@@ -384,9 +384,9 @@ def imagenette_dataloader_dispatcher(
     cuda_accel: bool = False,
     unshuffle_train: bool = False,
     shuffle_test: bool = False,
-    dataset_kwargs: Optional[dict] = None,
-    dataloader_kwargs: Optional[dict] = None,
-) -> Tuple[DataLoader, DataLoader, DataLoader]:
+    dataset_kwargs: dict | None = None,
+    dataloader_kwargs: dict | None = None,
+) -> tuple[DataLoader, DataLoader, DataLoader]:
     dataset_kwargs: dict = {} if dataset_kwargs is None else dataset_kwargs
 
     train_ds: DatasetFolder = ImageFolder(
@@ -448,9 +448,9 @@ def tinyimagenet_dataloader_dispatcher(
     cuda_accel: bool = False,
     unshuffle_train: bool = False,
     shuffle_test: bool = False,
-    dataset_kwargs: Optional[dict] = None,
-    dataloader_kwargs: Optional[dict] = None,
-) -> Tuple[DataLoader, DataLoader, DataLoader]:
+    dataset_kwargs: dict | None = None,
+    dataloader_kwargs: dict | None = None,
+) -> tuple[DataLoader, DataLoader, DataLoader]:
     dataset_kwargs: dict = {} if dataset_kwargs is None else dataset_kwargs
 
     train_ds: TinyImagenet = TinyImagenet(

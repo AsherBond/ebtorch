@@ -19,8 +19,8 @@
 #
 # ──────────────────────────────────────────────────────────────────────────────
 # SPDX-License-Identifier: Apache-2.0
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from copy import deepcopy
-from typing import Tuple
 
 import torch as th
 from torch import nn as thnn
@@ -28,8 +28,8 @@ from torch import nn as thnn
 import ebtorch.nn as ebthnn
 
 # ──────────────────────────────────────────────────────────────────────────────
-
-__all__ = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "data_prep_dispatcher_1ch",
     "data_prep_dispatcher_3ch",
 ]
@@ -77,23 +77,23 @@ def data_prep_dispatcher_3ch(
     device, post_flatten: bool = True, inverse: bool = False, dataset: str = "cifarten"
 ) -> thnn.Module:
     if dataset == "cifarten":
-        means: Tuple[float, float, float] = (0.4914, 0.4822, 0.4465)
-        stds: Tuple[float, float, float] = (0.2471, 0.2435, 0.2616)
+        means: tuple[float, float, float] = (0.4914, 0.4822, 0.4465)
+        stds: tuple[float, float, float] = (0.2471, 0.2435, 0.2616)
     elif dataset == "cifarhundred":
-        means: Tuple[float, float, float] = (0.5071, 0.4865, 0.4409)
-        stds: Tuple[float, float, float] = (0.2673, 0.2564, 0.2762)
+        means: tuple[float, float, float] = (0.5071, 0.4865, 0.4409)
+        stds: tuple[float, float, float] = (0.2673, 0.2564, 0.2762)
     elif dataset == "imagenet":
-        means: Tuple[float, float, float] = (0.485, 0.456, 0.406)
-        stds: Tuple[float, float, float] = (0.229, 0.224, 0.225)
+        means: tuple[float, float, float] = (0.485, 0.456, 0.406)
+        stds: tuple[float, float, float] = (0.229, 0.224, 0.225)
     elif dataset == "pathmnist":
-        means: Tuple[float, float, float] = (0.7405, 0.533, 0.7058)
-        stds: Tuple[float, float, float] = (0.0723, 0.1038, 0.0731)
+        means: tuple[float, float, float] = (0.7405, 0.533, 0.7058)
+        stds: tuple[float, float, float] = (0.0723, 0.1038, 0.0731)
     elif dataset == "svhn":
-        means: Tuple[float, float, float] = (0.5, 0.5, 0.5)
-        stds: Tuple[float, float, float] = (0.5, 0.5, 0.5)
+        means: tuple[float, float, float] = (0.5, 0.5, 0.5)
+        stds: tuple[float, float, float] = (0.5, 0.5, 0.5)
     elif dataset == "tinyimagenet":
-        means: Tuple[float, float, float] = (0.4802, 0.4481, 0.3975)
-        stds: Tuple[float, float, float] = (0.2302, 0.2265, 0.2262)
+        means: tuple[float, float, float] = (0.4802, 0.4481, 0.3975)
+        stds: tuple[float, float, float] = (0.2302, 0.2265, 0.2262)
     else:
         raise ValueError("Invalid dataset.")
     if post_flatten:

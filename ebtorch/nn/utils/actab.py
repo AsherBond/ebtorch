@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # ──────────────────────────────────────────────────────────────────────────────
-from typing import List
-from typing import Tuple
-
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import torch
 
 # ──────────────────────────────────────────────────────────────────────────────
 
-__all__: List[str] = ["act_auto_broadcast", "broadcast_in_dim"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["act_auto_broadcast", "broadcast_in_dim"]
 
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-def broadcast_in_dim(xin: torch.Tensor, target_shape: torch.Size, broadcast_dims: Tuple[int, ...]) -> torch.Tensor:
-    s: List[int] = list(target_shape)
+def broadcast_in_dim(xin: torch.Tensor, target_shape: torch.Size, broadcast_dims: tuple[int, ...]) -> torch.Tensor:
+    s: list[int] = list(target_shape)
     for broadcast_dim in broadcast_dims:
         s[broadcast_dim] = -1
     for idx, dim in enumerate(s):

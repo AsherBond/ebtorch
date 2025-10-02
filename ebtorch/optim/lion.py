@@ -19,14 +19,14 @@
 # ==============================================================================
 """Implementation of the Lion optimizer."""
 
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from collections.abc import Callable
-from typing import Optional
-from typing import Tuple
 
 import torch
 from torch.optim.optimizer import Optimizer
 
-__all__ = ["Lion"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["Lion"]
 
 
 class Lion(Optimizer):
@@ -36,7 +36,7 @@ class Lion(Optimizer):
         self,
         params,
         lr: float = 1e-4,
-        betas: Tuple[float, float] = (0.9, 0.99),
+        betas: tuple[float, float] = (0.9, 0.99),
         weight_decay: float = 0.0,
     ):
         """Initialize the hyperparameters.
@@ -45,7 +45,7 @@ class Lion(Optimizer):
           params (iterable): iterable of parameters to optimize or dicts defining
             parameter groups
           lr (float, optional): learning rate (default: 1e-4)
-          betas (Tuple[float, float], optional): coefficients used for computing
+          betas (tuple[float, float], optional): coefficients used for computing
             running averages of gradient and its square (default: (0.9, 0.99))
           weight_decay (float, optional): weight decay coefficient (default: 0)
         """
@@ -60,7 +60,7 @@ class Lion(Optimizer):
         super().__init__(params, defaults)
 
     @torch.no_grad()
-    def step(self, closure: Optional[Callable] = None):
+    def step(self, closure: Callable | None = None):
         """Performs a single optimization step.
 
         Args:

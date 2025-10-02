@@ -11,15 +11,15 @@
 # SPDX-License-Identifier: MIT
 #
 # ──────────────────────────────────────────────────────────────────────────────
-from typing import Union
-
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from torch import distributed as dist
 from torch import Tensor
 
-__all__ = ["reduce_accumulate_keepalive"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["reduce_accumulate_keepalive"]
 
 
-def reduce_accumulate_keepalive(reduction_tensor: Tensor, accumulator: Union[int, float]):
+def reduce_accumulate_keepalive(reduction_tensor: Tensor, accumulator: int | float):
     dist.barrier()
     dist.all_reduce(reduction_tensor, op=dist.ReduceOp.SUM)
     dist.barrier()

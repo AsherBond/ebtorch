@@ -11,13 +11,14 @@
 # SPDX-License-Identifier: MIT
 #
 # ──────────────────────────────────────────────────────────────────────────────
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import os
-from typing import Tuple
 
-__all__ = ["slurm_nccl_env"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["slurm_nccl_env"]
 
 
-def slurm_nccl_env() -> Tuple[int, int, int, int, int, str]:
+def slurm_nccl_env() -> tuple[int, int, int, int, int, str]:
     """
     Get SLURM environment variables for NCCL-based distributed training.
     Remember to define in the SLURM script the following environment variable(s):

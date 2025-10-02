@@ -1,17 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # ──────────────────────────────────────────────────────────────────────────────
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import bisect
 import math
 import warnings
 from collections.abc import Callable
 from collections.abc import Sequence
 from typing import Any
-from typing import Dict
-from typing import List
-from typing import Optional
 from typing import TypeVar
-from typing import Union
 
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import _LRScheduler
@@ -22,18 +19,19 @@ T = TypeVar("T")
 
 # ──────────────────────────────────────────────────────────────────────────────
 
-__all__: List[str] = ["MultiPhaseScheduler"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["MultiPhaseScheduler"]
 
 # ──────────────────────────────────────────────────────────────────────────────
 
 
 def _normalize_list(
-    value: Optional[Union[T, Sequence[T]]],
+    value: T | Sequence[T] | None,
     name: str,
     length: int,
     caster: Callable[[T], T],
     default: T,
-) -> List[T]:
+) -> list[T]:
     """
     Casts a scalar or sequence to a list of `length`, using `caster`.
     If value is None, returns [default]*length.
@@ -42,16 +40,14 @@ def _normalize_list(
     if value is None:
         return [default] * length
     if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
-        seq: List[T] = [caster(v) for v in value]
+        seq: list[T] = [caster(v) for v in value]
         if len(seq) != length:
             raise ValueError(f"{name} must have length {length}, got {len(seq)}")
         return seq
     return [caster(value)] * length
 
 
-def _dilate_int(
-    x: Optional[Union[int, Sequence[int]]] = None, dilation: Optional[int] = None
-) -> Optional[Union[int, List[int]]]:
+def _dilate_int(x: int | Sequence[int] | None = None, dilation: int | None = None) -> int | list[int] | None:
     """Multiply an int or sequence of ints by a dilation factor."""
 
     if x is None:
@@ -81,25 +77,25 @@ class MultiPhaseScheduler(_LRScheduler):
     def __init__(
         self,
         optim: Optimizer,
-        init_lr: Union[float, Sequence[float]],
-        final_lr: Union[float, Sequence[float]],
+        init_lr: float | Sequence[float],
+        final_lr: float | Sequence[float],
         warmup_steps: int = 0,
-        steady_lr: Optional[Union[float, Sequence[float]]] = None,
-        steady_steps: Optional[Union[int, Sequence[int]]] = None,
-        anneal_steps: Optional[Union[int, Sequence[int]]] = None,
+        steady_lr: float | Sequence[float] | None = None,
+        steady_steps: int | Sequence[int] | None = None,
+        anneal_steps: int | Sequence[int] | None = None,
         cos_warmup: bool = False,
-        cos_annealing: Optional[Union[bool, Sequence[bool]]] = None,
-        step_dilation: Optional[int] = None,
+        cos_annealing: bool | Sequence[bool] | None = None,
+        step_dilation: int | None = None,
         verbose: bool = False,
     ) -> None:
         warmup_steps: int = _dilate_int(warmup_steps, step_dilation)
-        steady_steps: Optional[Union[int, Sequence[int]]] = _dilate_int(steady_steps, step_dilation)
-        anneal_steps: Optional[Union[int, Sequence[int]]] = _dilate_int(anneal_steps, step_dilation)
+        steady_steps: int | Sequence[int] | None = _dilate_int(steady_steps, step_dilation)
+        anneal_steps: int | Sequence[int] | None = _dilate_int(anneal_steps, step_dilation)
 
         num_groups: int = len(optim.param_groups)
 
-        self.init_lr: List[float] = _normalize_list(init_lr, "init_lr", num_groups, float, 0.0)
-        self.final_lr: List[float] = _normalize_list(final_lr, "final_lr", num_groups, float, 0.0)
+        self.init_lr: list[float] = _normalize_list(init_lr, "init_lr", num_groups, float, 0.0)
+        self.final_lr: list[float] = _normalize_list(final_lr, "final_lr", num_groups, float, 0.0)
 
         self.warmup_steps: int = max(0, int(warmup_steps))
         self.cos_warmup: bool = cos_warmup
@@ -108,7 +104,7 @@ class MultiPhaseScheduler(_LRScheduler):
         if steady_lr is not None:
             if isinstance(steady_lr, Sequence) and not isinstance(steady_lr, (str, bytes)) and len(steady_lr) == 0:
                 raise ValueError("`steady_lr` cannot be an empty list; use `None` to skip steady phases")
-            steadys: List[float] = [
+            steadys: list[float] = [
                 float(v)
                 for v in (
                     steady_lr
@@ -117,24 +113,24 @@ class MultiPhaseScheduler(_LRScheduler):
                 )
             ]
         else:
-            steadys: List[float] = []
+            steadys: list[float] = []
 
         num_phases: int = len(steadys)
 
-        self.steady_lr: List[float] = steadys
+        self.steady_lr: list[float] = steadys
 
-        self.steady_steps: List[int] = _normalize_list(steady_steps, "steady_steps", num_phases, int, 0)
-        self.anneal_steps: List[int] = _normalize_list(anneal_steps, "anneal_steps", num_phases, int, 0)
-        self.cos_annealing: List[int] = _normalize_list(cos_annealing, "cos_annealing", num_phases, bool, False)
+        self.steady_steps: list[int] = _normalize_list(steady_steps, "steady_steps", num_phases, int, 0)
+        self.anneal_steps: list[int] = _normalize_list(anneal_steps, "anneal_steps", num_phases, int, 0)
+        self.cos_annealing: list[int] = _normalize_list(cos_annealing, "cos_annealing", num_phases, bool, False)
 
-        self.phases: List[Dict[str, Any]] = []
-        lengths: List[int] = []
+        self.phases: list[dict[str, Any]] = []
+        lengths: list[int] = []
 
         if self.warmup_steps > 0:
             if self.steady_lr:
-                end_lr: List[float] = [self.steady_lr[0]] * num_groups
+                end_lr: list[float] = [self.steady_lr[0]] * num_groups
             else:
-                end_lr: List[float] = self.final_lr.copy()
+                end_lr: list[float] = self.final_lr.copy()
 
             self.phases.append({
                 "type": "warmup",
@@ -169,8 +165,8 @@ class MultiPhaseScheduler(_LRScheduler):
                 })
                 lengths.append(self.anneal_steps[i])
 
-        self.lengths: List[int] = lengths
-        self.cum_lengths: List[int] = []
+        self.lengths: list[int] = lengths
+        self.cum_lengths: list[int] = []
         c: int = 0
         for L in lengths:
             c += L
@@ -192,7 +188,7 @@ class MultiPhaseScheduler(_LRScheduler):
 
         super().__init__(optim, last_epoch=-1)
 
-    def get_lr(self) -> List[float]:
+    def get_lr(self) -> list[float]:
         t: int = self.last_epoch
 
         if t < 0:
@@ -201,21 +197,21 @@ class MultiPhaseScheduler(_LRScheduler):
             return self.final_lr.copy()
 
         idx: int = bisect.bisect_right(self.cum_lengths, t)
-        phase: Dict[str, Any] = self.phases[idx]
+        phase: dict[str, Any] = self.phases[idx]
         prev_cum: int = self.cum_lengths[idx - 1] if idx > 0 else 0
         offset: int = t - prev_cum
         cl: int = phase["length"]
 
         if phase["type"] == "steady":
-            lr: List[float] = phase["lr"]
+            lr: list[float] = phase["lr"]
         else:
-            start: List[float] = phase["start"]
-            end: List[float] = phase["end"]
+            start: list[float] = phase["start"]
+            end: list[float] = phase["end"]
             if phase["cos"]:
                 factor: float = 0.5 * (1 + math.cos(math.pi * offset / cl))
-                lr: List[float] = [e + (s - e) * factor for s, e in zip(start, end)]
+                lr: list[float] = [e + (s - e) * factor for s, e in zip(start, end)]
             else:
-                lr: List[float] = [s + (e - s) * (offset / cl) for s, e in zip(start, end)]
+                lr: list[float] = [s + (e - s) * (offset / cl) for s, e in zip(start, end)]
 
         if self.verbose:
             print(f"step={t}, phase_idx={idx}, type={phase['type']}, lr={lr}")

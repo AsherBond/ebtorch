@@ -28,16 +28,13 @@
 #
 # ==============================================================================
 # SPDX-License-Identifier: Apache-2.0
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Union
-
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import torch
 import torch.nn as nn
 from torch import Tensor
 
-__all__: List[str] = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "SinLU",
 ]
 
@@ -45,12 +42,12 @@ __all__: List[str] = [
 class SinLU(nn.Module):
     def __init__(
         self,
-        a: Union[int, float] = 1,
-        b: Union[int, float] = 1,
-        device: Optional[torch.device] = None,
-        dtype: Optional[torch.dtype] = None,
+        a: int | float = 1,
+        b: int | float = 1,
+        device: torch.device | None = None,
+        dtype: torch.dtype | None = None,
     ) -> None:
-        factory_kwargs: Dict[str, Union[Optional[torch.device], Optional[torch.dtype]]] = {
+        factory_kwargs: dict[str, torch.device | None | torch.dtype | None] = {
             "device": device,
             "dtype": dtype,
         }

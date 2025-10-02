@@ -11,14 +11,15 @@
 # SPDX-License-Identifier: MIT
 #
 # ──────────────────────────────────────────────────────────────────────────────
-# IMPORTS
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from torch import nn
 from torch import Tensor
 
 from .functional import smelu as fsmelu
 
 
-__all__ = ["SmeLU"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["SmeLU"]
 
 
 class SmeLU(nn.Module):

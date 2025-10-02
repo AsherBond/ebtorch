@@ -20,14 +20,15 @@
 #
 # ==============================================================================
 # SPDX-License-Identifier: Apache-2.0
-# IMPORTS
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from torch import nn
 from torch import Tensor
 
 from .functional import serlu as fserlu
 
 
-__all__ = ["SERLU"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["SERLU"]
 
 
 class SERLU(nn.Module):

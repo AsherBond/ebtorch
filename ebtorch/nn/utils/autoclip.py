@@ -17,16 +17,14 @@
 # ==============================================================================
 # SPDX-License-Identifier: MIT
 # SPDX-License-Identifier: Apache-2.0
-from typing import List
-from typing import Optional
-from typing import Union
-
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import numpy as np
 import torch.nn.utils as thutils
 
-__all__ = ["AutoClipper"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["AutoClipper"]
 
-realnum = Union[float, int]
+realnum = float | int
 
 
 def _get_grad_norm(model) -> realnum:
@@ -40,11 +38,11 @@ def _get_grad_norm(model) -> realnum:
 
 
 class AutoClipper:
-    def __init__(self, queue_size: Optional[realnum] = None) -> None:
+    def __init__(self, queue_size: realnum | None = None) -> None:
         if queue_size is not None:
             queue_size: int = int(queue_size)
-        self.queue_size: Optional[int] = queue_size
-        self.queue_list: List[float] = []
+        self.queue_size: int | None = queue_size
+        self.queue_list: list[float] = []
 
     def grad_consider(self, model) -> None:
         if self.queue_size is not None:
@@ -59,7 +57,7 @@ class AutoClipper:
     def reset(self) -> None:
         self.queue_list = []
 
-    def resize(self, queue_size: Optional[realnum] = None) -> None:
+    def resize(self, queue_size: realnum | None = None) -> None:
         if queue_size is not None:
             queue_size: int = int(queue_size)
         self.queue_size = queue_size

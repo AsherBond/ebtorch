@@ -17,13 +17,15 @@
 # ==============================================================================
 # SPDX-License-Identifier: MIT
 # SPDX-License-Identifier: Apache-2.0
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import contextlib as cxl
 from collections import defaultdict
 
 import torch
 from torch.optim.optimizer import Optimizer
 
-__all__ = ["Lookahead"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["Lookahead"]
 
 
 class Lookahead(Optimizer):

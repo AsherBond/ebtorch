@@ -19,13 +19,14 @@
 #
 # ==============================================================================
 # SPDX-License-Identifier: Apache-2.0
-# IMPORTS
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import torch
 from torch import Tensor
 
 from .functional import serf as fserf
 
-__all__ = ["ScaledERF"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["ScaledERF"]
 
 
 class ScaledERF(torch.nn.Module):

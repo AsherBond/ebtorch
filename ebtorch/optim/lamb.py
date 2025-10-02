@@ -34,12 +34,14 @@
 #
 # ──────────────────────────────────────────────────────────────────────────────
 #
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import math
 
 import torch
 from torch.optim import Optimizer
 
-__all__ = ["Lamb"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["Lamb"]
 
 
 class Lamb(Optimizer):
@@ -51,7 +53,7 @@ class Lamb(Optimizer):
     Arguments:
         params (iterable): iterable of parameters to optimize or dicts defining parameter groups.
         lr (float, optional): learning rate. (default: 1e-3)
-        betas (Tuple[float, float], optional): coefficients used for computing
+        betas (tuple[float, float], optional): coefficients used for computing
             running averages of gradient and its norm. (default: (0.9, 0.999))
         eps (float, optional): term added to the denominator to improve
             numerical stability. (default: 1e-8)

@@ -25,16 +25,16 @@
 #
 # ──────────────────────────────────────────────────────────────────────────────
 #
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import abc
 import math
 import warnings
 from typing import Any
-from typing import Dict
-from typing import Optional
 
 import torch
 
-__all__ = ["CosineLRScheduler"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["CosineLRScheduler"]
 
 
 class _Scheduler(abc.ABC):
@@ -90,17 +90,17 @@ class _Scheduler(abc.ABC):
         self.noise_seed = noise_seed if noise_seed is not None else 42
         self.update_groups(self.base_values)
 
-    def state_dict(self) -> Dict[str, Any]:
+    def state_dict(self) -> dict[str, Any]:
         return {key: value for key, value in self.__dict__.items() if key != "optimizer"}
 
-    def load_state_dict(self, state_dict: Dict[str, Any]) -> None:
+    def load_state_dict(self, state_dict: dict[str, Any]) -> None:
         self.__dict__.update(state_dict)
 
     @abc.abstractmethod
     def _get_lr(self, t: int) -> float:
         pass
 
-    def _get_values(self, t: int, on_epoch: bool = True) -> Optional[float]:
+    def _get_values(self, t: int, on_epoch: bool = True) -> float | None:
         proceed = (on_epoch and self.t_in_epochs) or (not on_epoch and not self.t_in_epochs)
         if not proceed:
             return None

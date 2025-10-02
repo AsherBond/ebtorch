@@ -19,21 +19,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import math
 from collections.abc import Callable
 from collections.abc import Iterable
 from typing import Any
-from typing import Dict
-from typing import Optional
-from typing import Tuple
-from typing import Union
 
 import torch
 from torch import Tensor
 from torch.optim.optimizer import Optimizer
 
 
-__all__ = ("AdaBound",)
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ("AdaBound",)
 
 msg_error_sparse_grad: str = "AdaBound does not support sparse gradients, please consider SparseAdam instead"
 
@@ -47,7 +45,7 @@ class AdaBound(Optimizer):
     Arguments:
         params (iterable): iterable of parameters to optimize or dicts defining parameter groups
         lr (float): learning rate (default: 1e-3)
-        betas (Tuple[float, float]): coefficients used for computing running averages of gradient and its square
+        betas (tuple[float, float]): coefficients used for computing running averages of gradient and its square
               (default: (0.9, 0.999))
         final_lr (float): final (SGD) learning rate (default: 0.1)
         gamma (float): convergence speed of the bound functions (default: 1e-3)
@@ -68,9 +66,9 @@ class AdaBound(Optimizer):
 
     def __init__(
         self,
-        params: Union[Iterable[Tensor], Iterable[Dict[str, Any]]],
+        params: Iterable[Tensor] | Iterable[dict[str, Any]],
         lr: float = 1e-3,
-        betas: Tuple[float, float] = (0.9, 0.999),
+        betas: tuple[float, float] = (0.9, 0.999),
         final_lr: float = 0.1,
         gamma: float = 1e-3,
         eps: float = 1e-8,
@@ -105,12 +103,12 @@ class AdaBound(Optimizer):
         self.base_lrs = [group["lr"] for group in self.param_groups]
         self.decouple_wd = decouple_wd
 
-    def __setstate__(self, state: Dict[str, Any]) -> None:
+    def __setstate__(self, state: dict[str, Any]) -> None:
         super(AdaBound, self).__setstate__(state)
         for group in self.param_groups:
             group.setdefault("amsbound", False)
 
-    def step(self, closure: Optional[Callable[[], float]] = None) -> Optional[float]:
+    def step(self, closure: Callable[[], float] | None = None) -> float | None:
         r"""Performs a single optimization step.
 
         Arguments:
@@ -131,7 +129,7 @@ class AdaBound(Optimizer):
 
                 state = self.state[p]
 
-                # Dict[str, Any] initialization
+                # dict[str, Any] initialization
                 if len(state) == 0:
                     state["step"] = 0
                     # Exponential moving average of gradient values

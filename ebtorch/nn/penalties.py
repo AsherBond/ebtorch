@@ -22,12 +22,9 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # ──────────────────────────────────────────────────────────────────────────────
-# Imports
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from collections.abc import Callable
 from math import pow as mpow
-from typing import List
-from typing import Tuple
-from typing import Union
 
 import torch
 from torch import Tensor
@@ -49,7 +46,8 @@ def _bool_one_minusone(boolean: bool) -> int:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-__all__ = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "multilasso",
     "multiridge",
     "beta_gaussian_kldiv",
@@ -61,7 +59,7 @@ __all__ = [
 
 
 def multilasso(
-    params: Union[Tensor, List[Tensor], Tuple[Tensor, ...]],
+    params: Tensor | list[Tensor] | tuple[Tensor, ...],
     p_lasso: float = 1.0,
     p_ridge: float = 2.0,
     lam: float = 0.1,
@@ -71,16 +69,16 @@ def multilasso(
 ) -> Tensor:
     # Handle params multi-instance
     if isinstance(params, Tensor):
-        params: List[Tensor] = [params]
+        params: list[Tensor] = [params]
     elif isinstance(params, tuple):
-        params: List[Tensor] = list(params)
+        params: list[Tensor] = list(params)
 
     # Preprocess params and decouple lists
     if reg_oneminus:
-        params: List[Tensor] = [
+        params: list[Tensor] = [
             _bool_one_zero(reg_oneminus) + _bool_one_minusone(not reg_oneminus) * param for param in params
         ]
-    params: List[Tensor] = [param.flatten() for param in params]
+    params: list[Tensor] = [param.flatten() for param in params]
 
     # Compute Lasso penalty
     lpen: Tensor = torch.cat(params).norm(p=p_lasso)
@@ -108,19 +106,19 @@ def multilasso(
 
 
 def multiridge(
-    params: Union[Tensor, List[Tensor], Tuple[Tensor, ...]],
+    params: Tensor | list[Tensor] | tuple[Tensor, ...],
     p_ridge: float = 2.0,
     lam: float = 0.1,
     adimensionalize: bool = False,
 ) -> Tensor:
     # Handle params multi-instance
     if isinstance(params, Tensor):
-        params: List[Tensor] = [params]
+        params: list[Tensor] = [params]
     elif isinstance(params, tuple):
-        params: List[Tensor] = list(params)
+        params: list[Tensor] = list(params)
 
     # Preprocess params
-    params: List[Tensor] = [param.flatten() for param in params]
+    params: list[Tensor] = [param.flatten() for param in params]
 
     # Compute penalty
     rpen: Tensor = torch.cat(params).norm(p=p_ridge)
@@ -146,15 +144,15 @@ def reco_reg_split(
     x_pred: Tensor,
     sparsifiand: Tensor,
     *,
-    lambdas: Union[realnum, Tuple[realnum, ...]] = 1,
-    lpows: Union[realnum, Tuple[realnum, ...]] = 1,
+    lambdas: realnum | tuple[realnum, ...] = 1,
+    lpows: realnum | tuple[realnum, ...] = 1,
     reco_fx: Callable[..., Tensor] = F.mse_loss,
     reduction: str = "mean",
-) -> Tuple[Tensor, Tensor, Tensor]:
+) -> tuple[Tensor, Tensor, Tensor]:
     if not isinstance(lambdas, Tuple):
-        lambdas: Tuple[realnum, ...] = (lambdas,)
+        lambdas: tuple[realnum, ...] = (lambdas,)
     if not isinstance(lpows, Tuple):
-        lpows: Tuple[realnum, ...] = (lpows,)
+        lpows: tuple[realnum, ...] = (lpows,)
 
     reco: Tensor = reco_fx(x_pred, x_true, reduction=reduction)
     spar: Tensor = sum(  # type: ignore
@@ -170,8 +168,8 @@ def reco_reg(
     x_pred: Tensor,
     sparsifiand: Tensor,
     *,
-    lambdas: Union[realnum, Tuple[realnum, ...]] = 1,
-    lpows: Union[realnum, Tuple[realnum, ...]] = 1,
+    lambdas: realnum | tuple[realnum, ...] = 1,
+    lpows: realnum | tuple[realnum, ...] = 1,
     reco_fx: Callable[..., Tensor] = F.mse_loss,
     reduction: str = "mean",
 ):

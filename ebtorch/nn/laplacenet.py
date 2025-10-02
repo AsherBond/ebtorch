@@ -11,17 +11,18 @@
 #                      Licensed according to the MIT License.
 #
 # ==============================================================================
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from collections.abc import Callable
 from collections.abc import Iterable
 from copy import deepcopy
-from typing import Tuple
 
 import numpy as np
 import torch
 import torch.nn.functional as F
 from torch import nn
 
-__all__ = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "SolvePoisson",
     "SolvePoissonTensor",
     "MultiSolvePoissonTensor",
@@ -30,7 +31,7 @@ __all__ = [
 ]
 
 
-def lattice_edges(image_height: int, image_width: int) -> Tuple[Iterable[int], Iterable[int]]:
+def lattice_edges(image_height: int, image_width: int) -> tuple[Iterable[int], Iterable[int]]:
     """The set of edges in a 2D 4-connected graph.
 
     The edges in the network connect each vertex to its four adjacent vertices.

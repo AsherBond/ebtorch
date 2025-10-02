@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: MIT
 #
 # ──────────────────────────────────────────────────────────────────────────────
-# Imports (specific)
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from .inner_functional import batched_outer
 from .inner_functional import bisided_thresholding
 from .inner_functional import cummatmul
@@ -26,5 +26,5 @@ from .inner_functional import smelu
 from .inner_functional import telu
 from .inner_functional import tensor_replicate
 
-# Deletions (from .)
+# ──────────────────────────────────────────────────────────────────────────────
 del inner_functional

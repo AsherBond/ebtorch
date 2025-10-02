@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # ──────────────────────────────────────────────────────────────────────────────
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import math
-from typing import List
-from typing import Union
 
 import torch as th
 from torch import Tensor
@@ -11,7 +10,8 @@ from torch import Tensor
 from ...typing import numlike
 
 # ──────────────────────────────────────────────────────────────────────────────
-__all__: List[str] = ["div_by_factorial", "auto_comb", "log_muldiv"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["div_by_factorial", "auto_comb", "log_muldiv"]
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -43,7 +43,7 @@ def div_by_factorial(x: Tensor, n: int, max_exact_n: int = 18) -> Tensor:
     return th.sign(x) * th.exp(th.log(th.abs(x)) - log_factorial_n)
 
 
-def auto_comb(n: int, k: int, max_exact_n: int = 66) -> Union[int, float]:
+def auto_comb(n: int, k: int, max_exact_n: int = 66) -> int | float:
     """
     Compute the binomial coefficient `n choose k` using Stirling's approximation for large `n`.
 
@@ -58,7 +58,7 @@ def auto_comb(n: int, k: int, max_exact_n: int = 66) -> Union[int, float]:
 
     Returns
     -------
-    Union[int, float]
+    int | float
         The binomial coefficient.
     """
 

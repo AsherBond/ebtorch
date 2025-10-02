@@ -23,9 +23,11 @@
 # ==============================================================================
 # SPDX-License-Identifier: MIT
 # SPDX-License-Identifier: Apache-2.0
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import torch
 
-__all__ = ["SAM"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["SAM"]
 
 
 class SAM(torch.optim.Optimizer):

@@ -28,19 +28,16 @@
 # ==============================================================================
 # SPDX-License-Identifier: MIT
 # SPDX-License-Identifier: Apache-2.0
-# IMPORTS
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import math
-from typing import List
-from typing import Optional
-from typing import Tuple
-from typing import Union
 
 import torch
 import torch.nn.functional as F
 from thrmt.core import batched_outer
 from torch import Tensor
 
-__all__ = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "bisided_thresholding",
     "cummatmul",
     "field_transform",
@@ -62,9 +59,9 @@ __all__ = [
 
 def field_transform(
     x_input: Tensor,
-    pre_sum: Union[float, Tensor] = 0.0,
-    mult_div: Union[float, Tensor] = 1.0,
-    post_sum: Union[float, Tensor] = 0.0,
+    pre_sum: float | Tensor = 0.0,
+    mult_div: float | Tensor = 1.0,
+    post_sum: float | Tensor = 0.0,
     div_not_mul: bool = False,
 ) -> Tensor:
     if div_not_mul:
@@ -140,22 +137,22 @@ def oldtranspose(x: Tensor) -> Tensor:
     return x.permute(*torch.arange(x.ndim - 1, -1, -1))
 
 
-def silhouette_score(feats: Tensor, labels: Tensor) -> Union[float, Tensor]:  # NOSONAR
+def silhouette_score(feats: Tensor, labels: Tensor) -> float | Tensor:  # NOSONAR
     if feats.shape[0] != labels.shape[0]:
         raise ValueError(f"`feats` (shape {feats.shape}) and `labels` (shape {labels.shape}) must have same length")
     device, dtype = feats.device, feats.dtype
-    unique_labels: Union[Tensor, Tuple[Tensor, ...]] = torch.unique(labels)  # NOSONAR
+    unique_labels: Tensor | tuple[Tensor, ...] = torch.unique(labels)  # NOSONAR
     num_samples: int = feats.shape[0]
     if not (1 < len(unique_labels) < num_samples):
         raise ValueError("The number of unique `labels` must be ∈ (1, `num_samples`)")
-    scores: List[Tensor] = []
+    scores: list[Tensor] = []
     for l_label in unique_labels:
         curr_cluster: Tensor = feats[labels == l_label]
         num_elements: int = len(curr_cluster)
         if num_elements > 1:
             intra_cluster_dists: Tensor = torch.cdist(curr_cluster, curr_cluster)
             mean_intra_dists: Tensor = torch.sum(intra_cluster_dists, dim=1) / (num_elements - 1)
-            dists_to_other_clusters: List[Tensor] = []
+            dists_to_other_clusters: list[Tensor] = []
             for other_l in unique_labels:
                 if other_l != l_label:
                     other_cluster: Tensor = feats[labels == other_l]
@@ -178,9 +175,9 @@ def silhouette_score(feats: Tensor, labels: Tensor) -> Union[float, Tensor]:  # 
     return torch.mean(scores_t)
 
 
-def cummatmul(input_list: Union[List[Tensor], Tensor], tensorize: Optional[bool] = None) -> Union[List[Tensor], Tensor]:
+def cummatmul(input_list: list[Tensor] | Tensor, tensorize: bool | None = None) -> list[Tensor] | Tensor:
     tensorize = isinstance(input_list, Tensor) if tensorize is None else tensorize
-    cmm_list: List[Tensor] = [input_list[0]]
+    cmm_list: list[Tensor] = [input_list[0]]
     mat: Tensor
     for mat in input_list[1:]:
         cmm_list.append(torch.matmul(cmm_list[-1], mat))

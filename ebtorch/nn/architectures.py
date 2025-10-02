@@ -19,15 +19,11 @@
 #
 # ==============================================================================
 # SPDX-License-Identifier: Apache-2.0
-# IMPORTS
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import copy
 from collections.abc import Callable
 from math import copysign
 from math import sqrt as msqrt
-from typing import List
-from typing import Optional
-from typing import Tuple
-from typing import Union
 
 import torch
 from torch import nn
@@ -40,7 +36,8 @@ from .functional import silhouette_score
 from .penalties import beta_gaussian_kldiv
 from .utils import fxfx2module
 
-__all__ = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "pixelwise_bce_sum",
     "pixelwise_bce_mean",
     "beta_reco_bce",
@@ -191,13 +188,13 @@ def _rbm_mask_generator(size: int, ood_width: int = 0, dens: float = 1.0, rand_d
 
 
 def _masked_gradient_hook_factory(
-    mask: Union[Tensor, None],
-) -> Callable[[Union[Tensor, None]], Union[Tensor, None]]:
+    mask: Tensor | None,
+) -> Callable[[Tensor | None], Tensor | None]:
     """
     Return a backward hook that masks the gradient with the given mask.
     """
 
-    def _masked_gradient_hook(grad: Union[Tensor, None]) -> Union[Tensor, None]:
+    def _masked_gradient_hook(grad: Tensor | None) -> Tensor | None:
         """
         Backward hook that masks the gradient with nonlocal variable `mask`.
         """
@@ -226,17 +223,17 @@ class SimpleFCN(nn.Module):
         self,
         in_dim: int,
         out_dim: int,
-        hid_dims: Optional[Union[List[int], Tuple[int, ...], int]] = None,
-        actv: Union[nn.Module, Callable[[Tensor], Tensor]] = nn.Mish(),
-        final_actv: Optional[Union[nn.Module, Callable[[Tensor], Tensor]]] = None,
+        hid_dims: list[int] | tuple[int, ...] | int | None = None,
+        actv: nn.Module | Callable[[Tensor], Tensor] = nn.Mish(),
+        final_actv: nn.Module | Callable[[Tensor], Tensor] | None = None,
         normalize: bool = False,
     ) -> None:
         super().__init__()
         if hid_dims is None:
-            hid_dims: Union[List[int], Tuple[int, ...]] = []
+            hid_dims: list[int] | tuple[int, ...] = []
         elif not isinstance(hid_dims, (list, tuple)):
-            hid_dims: Union[List[int], Tuple[int, ...]] = (hid_dims,)
-        layers: List[nn.Module] = []
+            hid_dims: list[int] | tuple[int, ...] = (hid_dims,)
+        layers: list[nn.Module] = []
         prev_dim: int = in_dim
         for dim in hid_dims:
             layers.append(nn.Linear(prev_dim, dim))
@@ -258,12 +255,12 @@ class SimpleFCN(nn.Module):
 class FCBlock(nn.Module):
     def __init__(  # NOSONAR
         self,
-        in_sizes: Union[List[int], tuple],
+        in_sizes: list[int] | tuple,
         out_size: int,
-        bias: Optional[Union[List[bool], tuple, bool]] = None,
-        activation_fx: Optional[Union[List, nn.ModuleList, nn.Module]] = None,
-        dropout: Optional[Union[List[Union[float, bool]], float, bool, tuple]] = None,
-        batchnorm: Optional[Union[List[bool], bool, tuple]] = None,
+        bias: list[bool] | tuple | bool | None = None,
+        activation_fx: list | nn.ModuleList | nn.Module | None = None,
+        dropout: list[float | bool] | float | bool | tuple | None = None,
+        batchnorm: list[bool] | bool | tuple | None = None,
     ) -> None:
         super().__init__()
 
@@ -361,14 +358,14 @@ class FCBlockLegacy(nn.Module):
     def __init__(
         self,
         fin: int,
-        hsizes: List[int],
+        hsizes: list[int],
         fout: int,
         hactiv,
         oactiv,
-        bias: Union[bool, List[bool]] = True,
+        bias: bool | list[bool] = True,
     ) -> None:
         super().__init__()
-        allsizes: List[int] = [fin] + hsizes + [fout]
+        allsizes: list[int] = [fin] + hsizes + [fout]
 
         # Biases for the linears below
         if not isinstance(bias, list):
@@ -438,9 +435,7 @@ class CausalConv1d(nn.Conv1d):
 
 
 # Reparameterizer / Sampler for (C)VAEs & co.
-def _gauss_reparameterize_sample(
-    z_mu: Tensor, z_log_var: Tensor, device: Optional[torch.DeviceObjType] = None
-) -> Tensor:
+def _gauss_reparameterize_sample(z_mu: Tensor, z_log_var: Tensor, device: torch.DeviceObjType | None = None) -> Tensor:
     if device is None:
         device = z_mu.device
         if device != z_log_var.device:
@@ -483,8 +478,8 @@ class SGRUHCell(nn.Module):
         batch_first: bool = False,
         dropout: realnum = 0,
         bidirectional: bool = False,
-        tbptt: Union[bool, int] = False,
-        hx: Optional[Tensor] = None,
+        tbptt: bool | int = False,
+        hx: Tensor | None = None,
         readin_head: nn.Module = nn.Identity(),
         readout_head: nn.Module = nn.Identity(),
     ) -> None:
@@ -543,7 +538,7 @@ class SGRUHCell(nn.Module):
         # Return
         return out
 
-    def reset_hx(self, hx: Optional[Tensor] = None) -> None:
+    def reset_hx(self, hx: Tensor | None = None) -> None:
         # Register the detachment of self._hx in PyTorch computational graph
         if self._hx is not None:
             self._hx: Tensor = self._hx.detach()
@@ -622,7 +617,7 @@ class RBLinear(nn.Linear):
 
     features: int
     w_mask: Tensor
-    b_mask: Union[Tensor, None]
+    b_mask: Tensor | None
     ood_width: int
     dens: float
     rand_diag: bool
@@ -676,7 +671,7 @@ class RBLinear(nn.Linear):
         self.register_buffer(name="b_mask", tensor=_b_mask, persistent=True)
 
         # Mask and hook weight and bias
-        self.hook_handles: List[RemovableHandle] = []
+        self.hook_handles: list[RemovableHandle] = []
         self._mask_and_hook()
 
     def _mask_and_hook(self) -> None:
@@ -729,8 +724,8 @@ class DeepRBL(nn.Module):
         self,
         features: int,
         depth: int = 1,
-        act_fx: Union[nn.Module, Callable] = nn.Identity(),
-        act_final_fx: Optional[Union[nn.Module, Callable]] = None,
+        act_fx: nn.Module | Callable = nn.Identity(),
+        act_final_fx: nn.Module | Callable | None = None,
         batchnorm: bool = False,
         ood_width: int = 0,
         dens: float = 1.0,
@@ -755,8 +750,8 @@ class DeepRBL(nn.Module):
         # Store arguments
         self.features: int = features
         self.depth: int = depth
-        self.act_fx: Union[nn.Module, Callable] = act_fx
-        self.act_final_fx: Union[nn.Module, Callable] = act_final_fx
+        self.act_fx: nn.Module | Callable = act_fx
+        self.act_final_fx: nn.Module | Callable = act_final_fx
         self.batchnorm: bool = batchnorm
         self.ood_width: int = ood_width
         self.dens: float = dens
@@ -815,15 +810,15 @@ class DeepRBL(nn.Module):
 class ResBlock(nn.Module):
     def __init__(
         self,
-        block: Union[nn.Module, Callable[[Tensor], Tensor]],
-        shortcut: Union[nn.Module, Callable[[Tensor], Tensor]] = nn.Identity(),
-        postall: Union[nn.Module, Callable[[Tensor], Tensor]] = nn.Identity(),
+        block: nn.Module | Callable[[Tensor], Tensor],
+        shortcut: nn.Module | Callable[[Tensor], Tensor] = nn.Identity(),
+        postall: nn.Module | Callable[[Tensor], Tensor] = nn.Identity(),
         sqrt2norm: bool = False,
     ) -> None:
         super().__init__()
-        self.block: Union[nn.Module, Callable[[Tensor], Tensor]] = block
-        self.shtct: Union[nn.Module, Callable[[Tensor], Tensor]] = shortcut
-        self.postl: Union[nn.Module, Callable[[Tensor], Tensor]] = postall
+        self.block: nn.Module | Callable[[Tensor], Tensor] = block
+        self.shtct: nn.Module | Callable[[Tensor], Tensor] = shortcut
+        self.postl: nn.Module | Callable[[Tensor], Tensor] = postall
         self.addnorm: realnum = msqrt(2) if sqrt2norm else 1
 
     def forward(self, x: Tensor) -> Tensor:
@@ -856,7 +851,7 @@ class BasicAE(nn.Module):
         self.decoder: nn.Module = decoder
         self.extract_z: bool = extract_z
 
-    def forward(self, x: Tensor) -> Union[Tensor, Tuple[Tensor, Tensor]]:
+    def forward(self, x: Tensor) -> Tensor | tuple[Tensor, Tensor]:
         z: Tensor = self.encoder(x)
         y: Tensor = self.decoder(z)
         if self.extract_z:
@@ -886,12 +881,7 @@ class BasicVAE(nn.Module):
 
     def forward(
         self, x: Tensor
-    ) -> Union[
-        Tensor,
-        Tuple[Tensor, Tensor],
-        Tuple[Tensor, Tensor, Tensor],
-        Tuple[Tensor, Tensor, Tensor, Tensor],
-    ]:
+    ) -> Tensor | tuple[Tensor, Tensor] | tuple[Tensor, Tensor, Tensor] | tuple[Tensor, Tensor, Tensor, Tensor]:
         shared: Tensor = self.encoder(x)
         mean: Tensor = self.mean_neck(shared)
         logvar: Tensor = self.logvar_neck(shared)
@@ -928,12 +918,7 @@ class SingleNeckVAE(nn.Module):
 
     def forward(
         self, x: Tensor
-    ) -> Union[
-        Tensor,
-        Tuple[Tensor, Tensor],
-        Tuple[Tensor, Tensor, Tensor],
-        Tuple[Tensor, Tensor, Tensor, Tensor],
-    ]:
+    ) -> Tensor | tuple[Tensor, Tensor] | tuple[Tensor, Tensor, Tensor] | tuple[Tensor, Tensor, Tensor, Tensor]:
         shared: Tensor = self.encoder(x)
         mean, logvar = self.neck(shared)
         # noinspection DuplicatedCode
@@ -973,7 +958,7 @@ class TupleDecouple(nn.Module):
         self.module: nn.Module = module
         self.idx: int = idx
 
-    def forward(self, xtuple: Tuple[Tensor, ...]) -> Tuple[Tensor, ...]:
+    def forward(self, xtuple: tuple[Tensor, ...]) -> tuple[Tensor, ...]:
         return (
             *xtuple[: self.idx],
             self.module(xtuple[self.idx]),
@@ -986,7 +971,7 @@ class TupleSelect(nn.Module):
         super().__init__()
         self.idx: int = idx
 
-    def forward(self, xtuple: Tuple[Tensor, ...]) -> Tensor:
+    def forward(self, xtuple: tuple[Tensor, ...]) -> Tensor:
         return xtuple[self.idx]
 
 
@@ -1016,7 +1001,7 @@ class Concatenate(nn.Module):
         self.dim: int = dim
         self.flatten: bool = flatten
 
-    def forward(self, tensors: Union[Tuple[torch.Tensor, ...], List[torch.Tensor]]):
+    def forward(self, tensors: tuple[torch.Tensor, ...] | list[torch.Tensor]):
         tensors = [tensor.flatten(start_dim=1) for tensor in tensors] if self.flatten else tensors
         return torch.cat(tensors, dim=self.dim)
 
@@ -1027,7 +1012,7 @@ class DuplexLinearNeck(nn.Module):
         self.x_to_mu: nn.Linear = nn.Linear(in_dim, latent_dim)
         self.x_to_log_var: nn.Linear = nn.Linear(in_dim, latent_dim)
 
-    def forward(self, xc: Union[Tuple[torch.Tensor, ...], List[torch.Tensor]]) -> Tuple[torch.Tensor, torch.Tensor]:
+    def forward(self, xc: tuple[torch.Tensor, ...] | list[torch.Tensor]) -> tuple[torch.Tensor, torch.Tensor]:
         cxc: torch.Tensor = torch.cat(xc, dim=1)
         return self.x_to_mu(cxc), self.x_to_log_var(cxc)
 
@@ -1037,7 +1022,7 @@ class SharedDuplexLinearNeck(nn.Module):
         super().__init__()
         self.shared_layer: nn.Linear = nn.Linear(in_dim, 2 * latent_dim)
 
-    def forward(self, xc: Union[Tuple[torch.Tensor, ...], List[torch.Tensor]]) -> Tuple[torch.Tensor, torch.Tensor]:
+    def forward(self, xc: tuple[torch.Tensor, ...] | list[torch.Tensor]) -> tuple[torch.Tensor, torch.Tensor]:
         cxc: torch.Tensor = torch.cat(xc, dim=1)
         # noinspection PyTypeChecker
         return torch.chunk(self.shared_layer(cxc), 2, dim=1)
@@ -1049,23 +1034,23 @@ class SimpleDuplexLinearNeck(nn.Module):
         self.x_to_mu: nn.Linear = nn.Linear(in_dim, latent_dim)
         self.x_to_log_var: nn.Linear = nn.Linear(in_dim, latent_dim)
 
-    def forward(self, x: Tensor) -> Tuple[Tensor, Tensor]:
+    def forward(self, x: Tensor) -> tuple[Tensor, Tensor]:
         return self.x_to_mu(x), self.x_to_log_var(x)
 
 
 class GenerAct(nn.Module):
     def __init__(
         self,
-        act: Union[Callable[[Tensor], Tensor], nn.Module],
-        subv: Optional[float] = None,
-        maxv: Optional[float] = None,
-        minv: Optional[float] = None,
+        act: Callable[[Tensor], Tensor] | nn.Module,
+        subv: float | None = None,
+        maxv: float | None = None,
+        minv: float | None = None,
     ):
         super().__init__()
         self.act: nn.Module = fxfx2module(act)
-        self.subv: Optional[float] = subv
-        self.maxv: Optional[float] = maxv
-        self.minv: Optional[float] = minv
+        self.subv: float | None = subv
+        self.maxv: float | None = maxv
+        self.minv: float | None = minv
 
     def forward(self, x: Tensor) -> Tensor:
         x: Tensor = self.act(x)

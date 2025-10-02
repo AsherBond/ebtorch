@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # ──────────────────────────────────────────────────────────────────────────────
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from collections.abc import Callable
 from collections.abc import Iterable
 from collections.abc import Sequence
 from copy import deepcopy
 from itertools import repeat
 from typing import Any
-from typing import Optional
-from typing import Tuple
-from typing import Union
 
 import torch
 from safe_assert import safe_assert as sassert
@@ -20,7 +18,8 @@ from torch.nn import functional as F
 from .utils import fxfx2module
 
 # ──────────────────────────────────────────────────────────────────────────────
-__all__ = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "ConvStem",
     "MetaAILayerNorm",
     "GRNorm",
@@ -30,13 +29,13 @@ __all__ = [
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-def _ntuple(n: int) -> Callable[[Union[Any, Iterable[Any]]], Tuple[Any, ...]]:
+def _ntuple(n: int) -> Callable[[Any | Iterable[Any]], tuple[Any, ...]]:
     """
     Return a function that converts a single value or an iterable of values to a tuple of `n` values.
     (from: `pytorch-image-models/timm/layers/helpers.py`)
     """
 
-    def parse(x: Union[Any, Iterable[Any]]) -> Tuple[Any, ...]:
+    def parse(x: Any | Iterable[Any]) -> tuple[Any, ...]:
         if isinstance(x, Iterable) and not isinstance(x, str):
             return tuple(x)
         return tuple(repeat(x, n))
@@ -44,7 +43,7 @@ def _ntuple(n: int) -> Callable[[Union[Any, Iterable[Any]]], Tuple[Any, ...]]:
     return parse
 
 
-to_2tuple: Callable[[Union[Any, Iterable[Any]]], Tuple[Any, ...]] = _ntuple(2)
+to_2tuple: Callable[[Any | Iterable[Any]], tuple[Any, ...]] = _ntuple(2)
 # ──────────────────────────────────────────────────────────────────────────────
 
 
@@ -62,9 +61,9 @@ class ConvStem(nn.Module):
         embed_init_compr: int = 8,
         depth: int = 4,
         embed_step_expn: int = 2,
-        norm_layer: Optional[Callable[[int], nn.Module]] = None,
+        norm_layer: Callable[[int], nn.Module] | None = None,
         flatten: bool = True,
-        activation: Union[Callable[[Tensor], Tensor], nn.Module] = nn.ReLU(inplace=True),
+        activation: Callable[[Tensor], Tensor] | nn.Module = nn.ReLU(inplace=True),
     ) -> None:
         super().__init__()
 
@@ -115,7 +114,7 @@ class MetaAILayerNorm(nn.Module):
 
     def __init__(
         self,
-        normalized_shape: Union[int, Sequence[int]],
+        normalized_shape: int | Sequence[int],
         eps: float = 1e-6,
         data_format: str = "channels_last",
     ) -> None:
@@ -126,7 +125,7 @@ class MetaAILayerNorm(nn.Module):
         self.data_format: str = data_format
         if self.data_format not in ["channels_last", "channels_first"]:
             raise NotImplementedError(f"Data format {self.data_format} is not supported.")
-        self.normalized_shape: Tuple[int, ...] = (
+        self.normalized_shape: tuple[int, ...] = (
             tuple(normalized_shape) if isinstance(normalized_shape, Sequence) else (normalized_shape,)
         )
 

@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import torch
 
-__all__ = ["patchify_2d", "patchify_batch", "patchify_dataset"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["patchify_2d", "patchify_batch", "patchify_dataset"]
 
 
 def patchify_2d(img: torch.Tensor, patch_size: int, stride: int = 1) -> torch.Tensor:

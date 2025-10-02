@@ -20,12 +20,14 @@
 # ==============================================================================
 # SPDX-License-Identifier: Apache-2.0
 #
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import math
 
 import torch
 from torch import nn
 
-__all__ = ["ConvolutionalFlattenLayer"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["ConvolutionalFlattenLayer"]
 
 
 class ConvolutionalFlattenLayer(nn.Module):

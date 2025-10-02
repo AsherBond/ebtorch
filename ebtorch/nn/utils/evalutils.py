@@ -21,10 +21,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from collections.abc import Callable
-from typing import Optional
-from typing import Tuple
-from typing import Union
 
 import torch
 from torch import Tensor
@@ -32,7 +30,8 @@ from torch.nn import Module
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 
-__all__ = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "eval_model_on_test",
 ]
 
@@ -42,10 +41,10 @@ def eval_model_on_test(  # NOSONAR
     test_data_loader: DataLoader,
     device: torch.device,
     model_is_classifier: bool = True,
-    criterion_non_classifier: Optional[Callable] = None,
+    criterion_non_classifier: Callable | None = None,
     extract_z_non_classifier: bool = False,
     verbose: bool = False,
-) -> Union[Union[int, float], Tuple[Union[int, float], Tensor, Tensor]]:
+) -> int | float | tuple[int | float, Tensor, Tensor]:
     if not model_is_classifier and criterion_non_classifier is None:
         raise ValueError("Criterion must be provided for non-classifier models.")
 
@@ -79,7 +78,7 @@ def eval_model_on_test(  # NOSONAR
             else:  # not model_is_classifier
                 x_e, y_e = batched_datapoint_e
                 x_e: Tensor = x_e.to(device)
-                modeltarget_e_tuple: Tuple[Tensor, Tensor] = model(x_e)
+                modeltarget_e_tuple: tuple[Tensor, Tensor] = model(x_e)
                 modeltarget_e: Tensor = modeltarget_e_tuple[0]
                 if extract_z_non_classifier:
                     z_to_cat: Tensor = modeltarget_e_tuple[1]

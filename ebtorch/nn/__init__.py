@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: MIT
 #
 # ──────────────────────────────────────────────────────────────────────────────
-# Imports
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from .architectures import ArgMaxLayer
 from .architectures import BasicAE
 from .architectures import BasicVAE

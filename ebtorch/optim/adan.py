@@ -28,12 +28,14 @@
 # ==============================================================================
 #
 # SPDX-License-Identifier: Apache-2.0
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import math
 
 import torch
 from torch.optim.optimizer import Optimizer
 
-__all__ = ["Adan"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["Adan"]
 
 
 class Adan(Optimizer):
@@ -46,7 +48,7 @@ class Adan(Optimizer):
     Arguments:
         params (iterable): iterable of parameters to optimize or dicts defining parameter groups.
         lr (float, optional): learning rate. (default: 1e-3)
-        betas (Tuple[float, float, flot], optional): coefficients used for computing
+        betas (tuple[float, float, flot], optional): coefficients used for computing
             running averages of gradient and its norm. (default: (0.98, 0.92, 0.99))
         eps (float, optional): term added to the denominator to improve
             numerical stability. (default: 1e-8)

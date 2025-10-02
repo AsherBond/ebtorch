@@ -11,13 +11,13 @@
 # SPDX-License-Identifier: MIT
 #
 # ──────────────────────────────────────────────────────────────────────────────
-# Imports (specific)
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from .avgmeter import AverageMeter
 from .avgmeter import MultiAverageMeter
 from .logcsv import LogCSV
 from .yamldump import write_dict_as_yaml
 
-# Deletions (from .)
+# ──────────────────────────────────────────────────────────────────────────────
 del avgmeter
 del logcsv
 del yamldump

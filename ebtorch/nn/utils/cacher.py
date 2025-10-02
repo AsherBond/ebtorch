@@ -2,16 +2,14 @@
 # -*- coding: utf-8 -*-
 # ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 from collections.abc import Callable
-from typing import List
-from typing import Optional
-from typing import Tuple
+from typing import Any
 
 # ~~ Exports ~~ ────────────────────────────────────────────────────────────────
-__all__: List[str] = ["fromcache"]
+__all__: list[str] = ["fromcache"]
 
 
 # ~~ Utilities ~~ ──────────────────────────────────────────────────────────────
-def _normargs(args, kwargs, kwpos: Tuple[str, ...], kwdef: tuple) -> tuple:
+def _normargs(args, kwargs, kwpos: tuple[str, ...], kwdef: tuple) -> tuple:
     largs: int = len(args)
     n_args: list = list(args) + [None] * (len(kwpos) - largs)
     for i, argname in enumerate(kwpos[largs:], start=largs):
@@ -22,14 +20,14 @@ def _normargs(args, kwargs, kwpos: Tuple[str, ...], kwdef: tuple) -> tuple:
     return tuple(n_args)
 
 
-def _args2keyer(kwpos: Tuple[str, ...], kwdef: tuple) -> Callable:
+def _args2keyer(kwpos: tuple[str, ...], kwdef: tuple) -> Callable:
     def _args2key(*args, **kwargs) -> tuple:
         return _normargs(args, kwargs, kwpos, kwdef)
 
     return _args2key
 
 
-def _retlookup(key: tuple, dictionary: dict) -> Optional:
+def _retlookup(key: tuple, dictionary: dict) -> Any | None:
     return dictionary[key] if key in dictionary else None
 
 
@@ -37,7 +35,7 @@ def _retlookup(key: tuple, dictionary: dict) -> Optional:
 def fromcache(
     func: Callable,
     *,
-    kwpos: Tuple[str, ...],
+    kwpos: tuple[str, ...],
     kwdef: tuple,
     cache: dict,
     updateable: bool = True,

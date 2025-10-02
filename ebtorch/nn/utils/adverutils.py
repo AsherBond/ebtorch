@@ -4,15 +4,13 @@ import math
 from collections.abc import Callable
 from collections.abc import Generator
 from contextlib import contextmanager
-from typing import List
-from typing import Tuple
-from typing import Union
 
 import torch as th
 from advertorch.attacks import Attack as ATAttack
 from torchattacks.attack import Attack as TAAttack
 
-__all__ = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "AdverApply",
     "TA2ATAdapter",
     "sample_ndball",
@@ -156,10 +154,7 @@ class AdverApply:
 
     def __init__(
         self,
-        adversaries: Union[
-            List[Union[ATAttack, TA2ATAdapter]],
-            Tuple[Union[ATAttack, TA2ATAdapter], ...],
-        ],
+        adversaries: list[ATAttack | TA2ATAdapter] | tuple[ATAttack | TA2ATAdapter, ...],
         pre_process_fx: Callable = lambda x: x,
         post_process_fx: Callable = lambda x: x,
     ) -> None:
@@ -169,20 +164,20 @@ class AdverApply:
 
     def __call__(
         self,
-        x: List[th.Tensor],
+        x: list[th.Tensor],
         device,
         perturbed_fraction: float = 0.5,
         output_also_clean: bool = False,
-    ) -> Tuple[th.Tensor, ...]:
+    ) -> tuple[th.Tensor, ...]:
         _batch_size: int = x[0].shape[0]
 
         _adv_number: int = len(self.adversaries)
         _atom_size: int = int((_batch_size * perturbed_fraction) // _adv_number)
         _perturbed_size: int = _atom_size * _adv_number
 
-        _tensor_list_xclean: List[th.Tensor] = []
-        _tensor_list_yclean: List[th.Tensor] = []
-        _tensor_list_xpertu: List[th.Tensor] = []
+        _tensor_list_xclean: list[th.Tensor] = []
+        _tensor_list_yclean: list[th.Tensor] = []
+        _tensor_list_xpertu: list[th.Tensor] = []
 
         x = [self.pre_process_fx(x[0].to(device)), x[1].to(device)]
 

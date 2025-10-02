@@ -21,7 +21,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-# Imports
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import os
 import sys
 from collections.abc import Callable
@@ -32,12 +32,8 @@ from functools import partial as fpartial
 from os import environ
 from pathlib import Path
 from typing import Any
-from typing import Dict
 from typing import Literal
-from typing import Optional
 from typing import TextIO
-from typing import Tuple
-from typing import Union
 
 import requests
 import torch as th
@@ -53,7 +49,8 @@ from ...typing import actvt
 from ...typing import numlike
 from ...typing import strdev
 
-__all__ = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "argser_f",
     "emplace_kv",
     "download_gdrive",
@@ -91,7 +88,7 @@ def stablediv(num: numlike, den: numlike, eps: numlike, stabilize_both: bool = F
     return (num + eps * stabilize_both) / (den + eps)
 
 
-def argser_f(f, arglist: Union[list, tuple, dict]):
+def argser_f(f, arglist: list | tuple | dict):
     error_listerror = (
         "Function arguments must be either an args tuple or a kwargs dictionary, or both in this order inside a list."
     )
@@ -162,7 +159,7 @@ def download_gdrive(gdrive_id, fname_save):
 
 def argsink(*args) -> None:
     """Make static analysis happy and memory lighter :)"""
-    _: Tuple[Any, ...] = args
+    _: tuple[Any, ...] = args
     del _
 
 
@@ -184,7 +181,7 @@ def act_opclone(act: actvt) -> actvt:
     return deepcp(act) if isinstance(act, nn.Module) else _FxToModule(act)
 
 
-def fxfx2module(fx: Union[Callable[[Tensor], Tensor], nn.Module]) -> nn.Module:
+def fxfx2module(fx: Callable[[Tensor], Tensor] | nn.Module) -> nn.Module:
     return fx if isinstance(fx, nn.Module) else _FxToModule(fx)
 
 
@@ -212,8 +209,8 @@ def suppress_std(which: str = "all") -> Generator[None, Any, None]:
 
 def randhermn(
     n: int,
-    dtype: Optional[_dtype] = th.cdouble,
-    device: Optional[strdev] = None,
+    dtype: _dtype | None = th.cdouble,
+    device: strdev | None = None,
 ):
     return random_gue(
         size=n,
@@ -289,15 +286,15 @@ class _FxToModule(nn.Module):
 
 
 class TelegramBotEcho:  # NOSONAR
-    __slots__: Tuple[str, str, str] = ("_url", "_jdata", "_client")
+    __slots__: tuple[str, str, str] = ("_url", "_jdata", "_client")
 
     def __init__(
         self,
-        tok_var: Optional[str] = None,
-        chid_var: Optional[str] = None,
+        tok_var: str | None = None,
+        chid_var: str | None = None,
         *,
-        tok: Optional[str] = None,
-        chid: Optional[str] = None,
+        tok: str | None = None,
+        chid: str | None = None,
     ) -> None:
         sassert(
             (_isnn(tok) ^ _isnn(tok_var)) and (_isnn(chid) ^ _isnn(chid_var)),
@@ -307,7 +304,7 @@ class TelegramBotEcho:  # NOSONAR
         _chid: str = chid if _isnn(tok) else environ.get(chid_var)
 
         self._url: str = f"https://api.telegram.org/bot{_tok}/sendMessage"
-        self._jdata: Dict[str, str] = {
+        self._jdata: dict[str, str] = {
             "chat_id": _chid,
             "text": "",
         }
@@ -318,7 +315,7 @@ class TelegramBotEcho:  # NOSONAR
 
 
 class BestModelSaver:
-    __slots__: Tuple[str] = (
+    __slots__: tuple[str] = (
         "best_metric",
         "best_path",
         "from_epoch",
@@ -333,11 +330,11 @@ class BestModelSaver:
         self,
         *,
         name: str = "model",
-        path: Union[str, Path] = "./checkpoints",
+        path: str | Path = "./checkpoints",
         mode: Literal["max", "min"] = "max",
-        from_epoch: Optional[int] = None,
+        from_epoch: int | None = None,
         saver: Callable[[nn.Module, Path], None] = _safetensors_model_saver,
-        logger: Optional[Callable[[str], None]] = print,
+        logger: Callable[[str], None] | None = print,
     ) -> None:
         if mode not in ("max", "min"):
             raise ValueError("mode must be 'max' or 'min'")
@@ -347,16 +344,16 @@ class BestModelSaver:
         self.path.mkdir(parents=True, exist_ok=True)
         self.mode: Literal["max", "min"] = mode
         self.best_metric: numlike = float("inf") if mode == "min" else float("-inf")
-        self.best_path: Optional[Path] = None
-        self.from_epoch: Optional[int] = None if from_epoch is None else max(from_epoch, 0)
+        self.best_path: Path | None = None
+        self.from_epoch: int | None = None if from_epoch is None else max(from_epoch, 0)
         self.saver: Callable[[nn.Module, Path], None] = saver
-        self.logger: Optional[Callable[[str], None]] = logger
+        self.logger: Callable[[str], None] | None = logger
 
     def __call__(
         self,
         model: nn.Module,
         metric: numlike,
-        epoch: Optional[int] = None,
+        epoch: int | None = None,
     ) -> bool:
         if self.from_epoch is not None and epoch is None:
             raise ValueError("`epoch` must be provided if `from_epoch` is set")

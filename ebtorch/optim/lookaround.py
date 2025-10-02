@@ -21,22 +21,22 @@
 # Copyright (c) 2025 Emanuele Ballarin <emanuele@ballarin.cc> [minor edits]
 #                      All Rights Reserved. MIT Licensed.
 # ==============================================================================
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import copy
-from typing import List
-from typing import Optional
 
 import torch
 from torch import Tensor
 from torch.optim.optimizer import Optimizer
 from torch.optim.optimizer import required  # type: ignore
 
-__all__ = ("Lookaround",)
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ("Lookaround",)
 
 
 def _sgd(
-    params: List[Tensor],
-    d_p_list: List[Tensor],
-    momentum_buffer_list: List[Optional[Tensor]],
+    params: list[Tensor],
+    d_p_list: list[Tensor],
+    momentum_buffer_list: list[Tensor | None],
     weight_decay: float,
     momentum: float,
     lr: float,
@@ -50,7 +50,7 @@ def _sgd(
         if weight_decay != 0:
             d_p: Tensor = d_p.add(param, alpha=weight_decay)
         if momentum != 0:
-            buf: Optional[Tensor] = momentum_buffer_list[i]
+            buf: Tensor | None = momentum_buffer_list[i]
             if buf is None:
                 buf: Tensor = torch.clone(d_p).detach()
                 momentum_buffer_list[i]: Tensor = buf

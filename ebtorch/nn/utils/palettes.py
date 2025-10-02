@@ -21,14 +21,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-from typing import List
-
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import matplotlib as mpl
 from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.rcsetup import cycler
 
 # ──────────────────────────────────────────────────────────────────────────────
-__all__ = [
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = [
     "petroff_2021_color",
     "tableau10_color",
     "petroff_2021_cycler",
@@ -43,7 +43,7 @@ __all__ = [
 # After: M. A. Petroff, "Accessible Color Sequences for Data Visualization", 2021
 # (https://arxiv.org/abs/2107.02270;
 # https://github.com/matplotlib/matplotlib/issues/9460#issuecomment-875185352)
-petroff_2021_color: List[str] = [
+petroff_2021_color: list[str] = [
     "#3f90da",
     "#ffa90e",
     "#bd1f01",
@@ -58,7 +58,7 @@ petroff_2021_color: List[str] = [
 
 # After: M. Stone, "How we designed the new color palettes in Tableau 10", 2016
 # (https://www.tableau.com/blog/colors-upgrade-tableau-10-56782)
-tableau10_color: List[str] = [
+tableau10_color: list[str] = [
     "#4e79a7",
     "#f28e2b",
     "#e15759",

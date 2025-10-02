@@ -21,15 +21,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-# Imports
+# ~~ Imports ~~ ────────────────────────────────────────────────────────────────
 import warnings
 from collections.abc import Callable
 from collections.abc import Iterable
 from collections.abc import Sequence
 from typing import Any
-from typing import Optional
 from typing import TypeVar
-from typing import Union
 
 import torch as th
 from functorch import combine_state_for_ensemble
@@ -37,7 +35,8 @@ from functorch import vmap
 from torch import nn as thnn
 from torch.optim.swa_utils import AveragedModel
 
-__all__ = ["NNEnsemble"]
+# ~~ Exports ~~ ────────────────────────────────────────────────────────────────
+__all__: list[str] = ["NNEnsemble"]
 
 
 # Custom types
@@ -46,8 +45,8 @@ T = TypeVar("T", bound="NNEnsemble")
 
 # Functions
 def _tensor_no_op(
-    x: Union[th.Tensor, Sequence[th.Tensor]],
-) -> Union[th.Tensor, Sequence[th.Tensor]]:
+    x: th.Tensor | Sequence[th.Tensor],
+) -> th.Tensor | Sequence[th.Tensor]:
     return x
 
 
@@ -70,8 +69,8 @@ def _warn_swa_aggregation() -> None:
 class NNEnsemble(thnn.Module):
     def __init__(
         self: T,
-        models: Optional[Iterable[thnn.Module]] = None,
-        aggregation: Optional[Union[thnn.Module, Callable[[th.Tensor], th.Tensor]]] = None,
+        models: Iterable[thnn.Module] | None = None,
+        aggregation: thnn.Module | Callable[[th.Tensor], th.Tensor] | None = None,
         swa_ensemble: bool = False,
     ) -> None:
         super().__init__()
@@ -99,14 +98,14 @@ class NNEnsemble(thnn.Module):
             _warn_swa_aggregation()
 
         # Members required by SWA only
-        self.swa_model: Optional[AveragedModel] = None
-        self.bn_loader: Optional[Iterable] = None
+        self.swa_model: AveragedModel | None = None
+        self.bn_loader: Iterable | None = None
 
         # Members required by "pure" ensembles only
-        self.vfmodel: Optional[Any] = None
-        self.vparams: Optional[Any] = None
-        self.vbuffers: Optional[Any] = None
-        self.vensemble: Optional[Any] = None
+        self.vfmodel: Any | None = None
+        self.vparams: Any | None = None
+        self.vbuffers: Any | None = None
+        self.vensemble: Any | None = None
 
         # Test/Train safeguards
         self.notify_train_eval_changes_is_armed: bool = False
@@ -158,11 +157,11 @@ class NNEnsemble(thnn.Module):
     # Public methods
     def reset_state(self: T) -> T:
         self.models: thnn.ModuleList = thnn.ModuleList([])
-        self.swa_model: Optional[AveragedModel] = None
-        self.vfmodel: Optional[Any] = None
-        self.vparams: Optional[Any] = None
-        self.vbuffers: Optional[Any] = None
-        self.vensemble: Optional[Any] = None
+        self.swa_model: AveragedModel | None = None
+        self.vfmodel: Any | None = None
+        self.vparams: Any | None = None
+        self.vbuffers: Any | None = None
+        self.vensemble: Any | None = None
         return self
 
     def update_state(self: T, force_both: bool = False) -> T:
@@ -195,7 +194,7 @@ class NNEnsemble(thnn.Module):
 
     def set_aggregation(
         self,
-        aggregation: Union[thnn.Module, Callable[[th.Tensor], th.Tensor], None],
+        aggregation: thnn.Module | Callable[[th.Tensor], th.Tensor] | None,
     ):
         if aggregation is None:
             self.aggregation: Callable[[th.Tensor], th.Tensor] = _tensor_no_op
