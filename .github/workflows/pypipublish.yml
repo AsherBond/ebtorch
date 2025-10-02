@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'setup.py'
+      - 'pyproject.toml'
   workflow_dispatch:
 
 permissions:
